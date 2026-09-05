@@ -1,13 +1,18 @@
 "use client";
 
 export type Project = {
-  tags: string[];
+  id: string;
+  title: string;
   description: string;
   owner: string;
+  ownerInitials: string;
+  ownerColor: string;
+  disciplines: string[];
   lookingFor: string[];
-  hours_per_week: number;
-  num_members: number;
-  created_at: string;
+  commitment: string;
+  stage: string;
+  members: number;
+  posted: string;
 };
 
 type ProjectCardProps = {
@@ -21,13 +26,6 @@ export default function ProjectCard({
   isSelected = false,
   onSelect,
 }: ProjectCardProps) {
-  const ownerInitials = project.owner
-    .split(/\s+/)
-    .map((name) => name[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
   return (
     <article
       className={`group flex h-full flex-col rounded-3xl border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70 ${isSelected ? "border-indigo-500 ring-2 ring-indigo-100" : "border-slate-200"}`}
@@ -36,32 +34,38 @@ export default function ProjectCard({
         <div className="flex items-center gap-3">
           <span
             className="grid size-11 shrink-0 place-items-center rounded-2xl text-sm font-bold text-white"
-            style={{ backgroundColor: "#5b5bd6" }}
+            style={{ backgroundColor: project.ownerColor }}
             aria-hidden="true"
           >
-            {ownerInitials}
+            {project.ownerInitials}
           </span>
           <div>
             <p className="text-sm font-semibold text-slate-800">
               {project.owner}
             </p>
             <p className="mt-0.5 text-xs text-slate-500">
-              Posted {new Date(project.created_at).toLocaleDateString()}
+              Posted {project.posted}
             </p>
           </div>
         </div>
+        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+          {project.stage}
+        </span>
       </div>
       <div className="mt-6">
         <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
+          {project.disciplines.map((discipline) => (
             <span
-              key={tag}
+              key={discipline}
               className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700"
             >
-              {tag}
+              {discipline}
             </span>
           ))}
         </div>
+        <h2 className="mt-4 text-xl font-bold tracking-tight text-slate-950">
+          {project.title}
+        </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
           {project.description}
         </p>
@@ -76,10 +80,10 @@ export default function ProjectCard({
       </div>
       <div className="mt-auto flex items-center justify-between pt-6 text-sm text-slate-500">
         <span className="flex items-center gap-1.5">
-          <span aria-hidden="true">◷</span> {project.hours_per_week} hrs/week
+          <span aria-hidden="true">◷</span> {project.commitment}
         </span>
         <span className="flex items-center gap-1.5">
-          <span aria-hidden="true">◉</span> {project.num_members} members
+          <span aria-hidden="true">◉</span> {project.members} members
         </span>
       </div>
       <button
