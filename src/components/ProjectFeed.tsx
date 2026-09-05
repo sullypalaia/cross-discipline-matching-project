@@ -5,48 +5,43 @@ import ProjectCard, { type Project } from "./ProjectCard";
 
 type ProjectFeedProps = {
   projects: Project[];
-  selectedProjectId?: string;
+  selectedProject?: Project;
   onSelectProject: (project: Project) => void;
 };
-const allDisciplines = "All disciplines";
+const allTags = "All tags";
 
 export default function ProjectFeed({
   projects,
-  selectedProjectId,
+  selectedProject,
   onSelectProject,
 }: ProjectFeedProps) {
   const [query, setQuery] = useState("");
-  const [discipline, setDiscipline] = useState(allDisciplines);
-  const disciplines = useMemo(
+  const [tag, setTag] = useState(allTags);
+  const tags = useMemo(
     () => [
-      allDisciplines,
-      ...Array.from(
-        new Set(projects.flatMap((project) => project.disciplines)),
-      ).sort(),
+      allTags,
+      ...Array.from(new Set(projects.flatMap((project) => project.tags))).sort(),
     ],
     [projects],
   );
   const visibleProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return projects.filter((project) => {
-      const matchesDiscipline =
-        discipline === allDisciplines ||
-        project.disciplines.includes(discipline);
+      const matchesTag = tag === allTags || project.tags.includes(tag);
       const searchable = [
-        project.title,
         project.description,
         project.owner,
-        ...project.disciplines,
+        ...project.tags,
         ...project.lookingFor,
       ]
         .join(" ")
         .toLowerCase();
       return (
-        matchesDiscipline &&
+        matchesTag &&
         (!normalizedQuery || searchable.includes(normalizedQuery))
       );
     });
-  }, [discipline, projects, query]);
+  }, [projects, query, tag]);
   return (
     <section aria-labelledby="project-feed-heading">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -82,13 +77,13 @@ export default function ProjectFeed({
           />
         </label>
         <label className="relative">
-          <span className="sr-only">Filter by discipline</span>
+          <span className="sr-only">Filter by tag</span>
           <select
-            value={discipline}
-            onChange={(event) => setDiscipline(event.target.value)}
+            value={tag}
+            onChange={(event) => setTag(event.target.value)}
             className="h-full min-h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 pr-10 text-sm font-medium text-slate-700 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 md:w-48"
           >
-            {disciplines.map((option) => (
+            {tags.map((option) => (
               <option key={option}>{option}</option>
             ))}
           </select>
@@ -104,9 +99,9 @@ export default function ProjectFeed({
         <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {visibleProjects.map((project) => (
             <ProjectCard
-              key={project.id}
+              key={`${project.owner}-${project.created_at}`}
               project={project}
-              isSelected={selectedProjectId === project.id}
+              isSelected={selectedProject === project}
               onSelect={onSelectProject}
             />
           ))}
@@ -119,7 +114,7 @@ export default function ProjectFeed({
             type="button"
             onClick={() => {
               setQuery("");
-              setDiscipline(allDisciplines);
+              setTag(allTags);
             }}
             className="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800"
           >
