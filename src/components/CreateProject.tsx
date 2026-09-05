@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 export type Project = {
   title: string;
@@ -10,6 +11,7 @@ export type Project = {
 
 type CreateProjectProps = {
   onCreate?: (project: Project) => void;
+  renderTrigger?: (onClick: () => void) => ReactNode;
 };
 
 const suggestedTags = [
@@ -28,7 +30,10 @@ const tagStyles: Record<string, string> = {
   "Open to collaborators": "border-sky-200 bg-sky-50 text-sky-700",
 };
 
-export default function CreateProject({ onCreate }: CreateProjectProps) {
+export default function CreateProject({
+  onCreate,
+  renderTrigger,
+}: CreateProjectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -91,59 +96,64 @@ export default function CreateProject({ onCreate }: CreateProjectProps) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
-      >
-        <span aria-hidden="true" className="text-lg leading-none">
-          +
-        </span>
-        Create project
-      </button>
-
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setIsOpen(false);
-            }
-          }}
+      {renderTrigger ? (
+        renderTrigger(() => setIsOpen(true))
+      ) : (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
         >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="create-project-title"
-            className="max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8"
-          >
-            <div className="mb-6 flex items-start justify-between gap-4">
-              <div>
-                <p className="mb-2 text-sm font-medium text-indigo-600">
-                  Share something new
-                </p>
-                <h2
-                  id="create-project-title"
-                  className="text-2xl font-bold tracking-tight text-slate-950"
-                >
-                  Create a project
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Tell Cal Poly students what you&apos;re working on.
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close create project dialog"
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg p-2 text-2xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                &times;
-              </button>
-            </div>
+          <span aria-hidden="true" className="text-lg leading-none">
+            +
+          </span>
+          Create project
+        </button>
+      )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+      {isOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-50 flex min-h-screen items-center justify-center bg-slate-950/50 p-4 backdrop-blur-md"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                setIsOpen(false);
+              }
+            }}
+          >
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="create-project-title"
+              className="max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8"
+            >
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                  <p className="mb-2 text-sm font-medium text-indigo-600">
+                    Share something new
+                  </p>
+                  <h2
+                    id="create-project-title"
+                    className="text-2xl font-bold tracking-tight text-slate-950"
+                  >
+                    Create a project
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Tell Cal Poly students what you&apos;re working on.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Close create project dialog"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-lg p-2 text-2xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label
                   htmlFor="project-title"
@@ -273,10 +283,11 @@ export default function CreateProject({ onCreate }: CreateProjectProps) {
                   Create project
                 </button>
               </div>
-            </form>
-          </section>
-        </div>
-      )}
+              </form>
+            </section>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

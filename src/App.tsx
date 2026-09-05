@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CreateProject from "./components/CreateProject";
 import ProjectFeed from "./components/ProjectFeed";
 import type { Project } from "./components/ProjectCard";
 
@@ -129,12 +130,17 @@ export default function App() {
               My profile
             </a>
           </nav>
-          <button
-            type="button"
-            className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
-          >
-            Post a project
-          </button>
+          <CreateProject
+            renderTrigger={(onClick) => (
+              <button
+                type="button"
+                onClick={onClick}
+                className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
+              >
+                Post a project
+              </button>
+            )}
+          />
         </div>
       </header>
       <div id="top" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
