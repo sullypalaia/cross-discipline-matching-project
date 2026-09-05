@@ -1,9 +1,31 @@
+"use client";
+
 import Image from "next/image";
+import { useRef } from "react";
+import CreateProject from "../components/CreateProject";
 
 export default function Home() {
+  const projectTriggerRef = useRef<HTMLDivElement>(null);
+
+  const openCreateProject = () => {
+    projectTriggerRef.current?.querySelector("button")?.click();
+  };
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="relative flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <div className="absolute right-6 top-6">
+          <button
+            type="button"
+            onClick={openCreateProject}
+            className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
+          >
+            new project
+          </button>
+          <div ref={projectTriggerRef} className="[&>button]:hidden">
+            <CreateProject />
+          </div>
+        </div>
         <Image
           className="dark:invert h-5 w-[100px]"
           src="/next.svg"
