@@ -40,6 +40,11 @@ export default function App({ projects }: AppProps) {
               Our Goal
             </Link>
             <a href="#profile" className="transition hover:text-slate-950">
+            </a>
+            <a href="#how-it-works" className="transition hover:text-slate-950">
+              How it works
+            </a>
+            <a href="/account" className="transition hover:text-slate-950">
               My profile
             </a>
           </nav>
