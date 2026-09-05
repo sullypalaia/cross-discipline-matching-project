@@ -1,6 +1,8 @@
 "use client";
 
 export type Project = {
+  id: string;
+  title?: string;
   tags: string[];
   description: string;
   owner: string;
