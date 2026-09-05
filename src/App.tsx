@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import CreateProject from "./components/CreateProject";
 import ProjectFeed from "./components/ProjectFeed";
 import type { Project } from "./components/ProjectCard";
@@ -32,8 +33,13 @@ export default function App({ projects }: AppProps) {
             className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex"
             aria-label="Main navigation"
           >
-            <a href="#projects" className="text-indigo-600">
+            <Link href="/" className="text-indigo-600">
               Explore
+            </Link>
+            <Link href="/our-goal" className="transition hover:text-slate-950">
+              Our Goal
+            </Link>
+            <a href="#profile" className="transition hover:text-slate-950">
             </a>
             <a href="#how-it-works" className="transition hover:text-slate-950">
               How it works
