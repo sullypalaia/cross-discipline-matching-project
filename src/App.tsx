@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ProjectFeed from "./components/ProjectFeed";
 import type { Project } from "./components/ProjectCard";
+import JoinRequestForm from "./components/JoinRequestForm";
 
 const demoProjects: Project[] = [
   {
@@ -177,6 +178,7 @@ export default function App() {
           />
         </div>
       </div>
+      {selectedProject && <JoinRequestForm project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </main>
   );
 }
