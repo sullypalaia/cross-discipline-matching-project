@@ -1,4 +1,6 @@
 // Isolated API checks using clearly labeled sample fixtures, never production data.
+// KEEP for regression checks: these fixtures never enter shared app storage.
+// Student 4 maintains this script. Removing the demo page does not require removing it.
 // Start Next.js first, then: node scripts/check-matching.mjs [http://localhost:3000]
 import assert from "node:assert/strict";
 

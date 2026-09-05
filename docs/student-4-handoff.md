@@ -1,8 +1,31 @@
 # Student 4: profiles and sample recommendations
 
-Implemented on `tom-ai`. No commits, pushes, merges, storage, dependencies,
-navigation, or main-page changes. The previously staged empty type file is now
-populated in its existing location; no competing type file was created.
+Feature branch: `tom-ai`. This feature adds no shared storage, dependencies,
+navigation integration, or main-page changes. The matching types use the existing
+type-file location; no competing type file was created.
+
+## Who changes what, and what can be deleted
+
+Search the source for `TODO(team integration):`, `KEEP:`, and `DEMO ONLY`.
+Delete completed TODO comments only after verifying their connections work.
+
+| Owner | Work in scope | Completion check |
+| --- | --- | --- |
+| Student 1 | Place the two components in the real app; pass shared profile/projects; wire saving and navigation; coordinate shared-type mapping. | Save, refresh, find a real project, and open its detail view. |
+| Student 2 | Create/edit real project records with stable IDs, title, description, skillsNeeded, and numeric hoursPerWeek. Agree on field names with Student 1. | A newly created project reaches the matching list and retains its ID after editing. |
+| Student 3 | Build project details that open by ID, including missing-project handling; own join requests and teammate acceptance. | Student 1's navigation opens the selected project and its join controls. |
+| Student 4 | Maintain profile/matching components, validation, endpoint, matching logic, and tests; handle eventual AI integration. | Recommendations use actual inputs and all matching states work. |
+
+**Safe to delete after the real flow is verified:** Student 1 can remove
+`src/app/matching-demo/page.tsx` entirely. That removes the fictional project data,
+temporary page state, test checkbox, and selection confirmation together. Remove
+any links to `/matching-demo` and update this guide if the page is removed.
+
+**Keep:** both components, `/api/match`, validation, matching logic, and imported
+types. The sample algorithm is functional code, not disposable sample data.
+Keep `scripts/check-matching.mjs` for regression checks. Student 1 may consolidate
+types only after updating imports and agreeing on the contract with Students 2
+and 4. Keep sample labels until Student 4 actually connects a real AI provider.
 
 ## Completed features
 
@@ -26,6 +49,7 @@ populated in its existing location; no competing type file was created.
 - `src/components/ai/ProfileForm.tsx`: profile UI.
 - `src/components/ai/ProjectMatcher.tsx`: matching UI.
 - `scripts/check-matching.mjs`: repeatable live-endpoint checks using labeled fixtures.
+- `src/app/matching-demo/page.tsx`: standalone sample UI; removable after integration.
 - `docs/student-4-handoff.md`: this guide.
 
 ## How sample matching works

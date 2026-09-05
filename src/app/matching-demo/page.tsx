@@ -1,10 +1,21 @@
 "use client";
 
+// DEMO ONLY — SAFE TO DELETE AFTER INTEGRATION:
+// Student 1 can delete this entire page once the real app saves a profile,
+// matches Student 2's actual projects, and opens Student 3's detail view by ID.
+// First place ProfileForm and ProjectMatcher in the real app with real callbacks.
+// Deleting this file removes /matching-demo, not the reusable feature components.
+// Keep src/components/ai, src/lib/ai, src/app/api/match, and the matching types.
+// Student 4 owns this testing page until that handoff is complete.
+
 import { useState } from "react";
 import ProfileForm from "@/components/ai/ProfileForm";
 import ProjectMatcher from "@/components/ai/ProjectMatcher";
 import type { Profile, Project } from "@/app/types/matching";
 
+// DELETE WITH THIS DEMO: fictional sampleProjects, local profile/selection state,
+// empty-project checkbox, saved-profile message, and selection confirmation panel.
+// Do not copy these into shared storage. Student 2 owns real project creation.
 // Test fixtures only. No shared storage, database, or browser storage is used.
 const sampleProjects: Project[] = [
   {

@@ -5,6 +5,8 @@ import type { MatchResponse, Profile, Project } from "@/app/types/matching";
 import { requestError } from "@/lib/ai/validation";
 
 type Props = {
+  // KEEP: Student 4 owns this component and /api/match. Integration belongs in
+  // Student 1's parent component; keep sample labels until real AI is connected.
   // TODO(team integration): Student 1 passes the saved Profile (or null) and
   // current available Project[] from shared storage; Student 2 supplies the fields.
   profile: Profile | null;
@@ -12,6 +14,10 @@ type Props = {
   // TODO(team integration): Student 1 connects this ID to Student 3's detail
   // view, e.g. selectProject("solar-car"). No assumed URL or router is used here.
   onSelectProject: (projectId: string) => void;
+  // TODO(team integration): Student 3 supplies a detail view that accepts the
+  // same stable string ID (e.g. "solar-car") and handles a missing/deleted project.
+  // Student 1 owns the navigation callback above; Student 3 owns the detail UI,
+  // join requests, and acceptance behavior. Remove this TODO after connection.
 };
 
 export default function ProjectMatcher(props: Props) {

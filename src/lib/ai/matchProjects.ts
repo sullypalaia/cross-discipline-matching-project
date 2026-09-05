@@ -1,4 +1,7 @@
 import "server-only";
+// KEEP: This sample algorithm powers real matching requests; it is not demo data.
+// Student 4 owns any future AI replacement. Students 1–3 only integrate the inputs
+// and callbacks; deleting this function breaks /api/match.
 import type { Match, Profile, Project } from "@/app/types/matching";
 
 const normalize = (value: string) => value.trim().toLowerCase();

@@ -5,6 +5,10 @@ import type { Profile } from "@/app/types/matching";
 import { MAX_HOURS, profileError, profileFromForm } from "@/lib/ai/validation";
 
 type Props = {
+  // KEEP: Student 4's reusable form. Student 1 wires these props in the parent;
+  // remove the integration TODOs after wiring, not the form or its validation.
+  // TODO(team integration): Student 1 supplies the current saved Profile or null.
+  // After onSave succeeds, update this prop so matching uses the edited profile.
   initialProfile?: Profile | null;
   // TODO(team integration): Student 1 supplies shared storage's save callback.
   // Receive a Profile; return only after saving, or reject/throw on failure.
