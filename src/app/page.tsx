@@ -6,6 +6,7 @@ import type { Project } from "../components/ProjectCard";
 export default async function Home() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
+  const { data: { user } } = await supabase.auth.getUser();
   const { data: projects, error } = await supabase
     .from("user_projects")
     .select();
@@ -15,7 +16,6 @@ export default async function Home() {
     throw error;
   }
 
-  const { data: { user } } = await supabase.auth.getUser();
   let accountLabel: string | null = null;
 
   if (user) {
@@ -28,8 +28,30 @@ export default async function Home() {
     accountLabel = profile?.display_name?.trim() || user.email || "Account";
   }
      
+  let exploreProjects = projects ?? [];
+  if (user) {
+    const { data: requests, error: requestsError } = await supabase
+      .from("join_requests")
+      .select("project_id")
+      .eq("requester_id", user.id);
+
+    if (requestsError) {
+      console.error("Unable to filter requested projects", requestsError);
+      throw requestsError;
+    }
+
+    const requestedProjectIds = new Set(
+      (requests ?? []).map((request) => String(request.project_id)),
+    );
+    exploreProjects = exploreProjects.filter(
+      (project) =>
+        project.owner !== user.id &&
+        !requestedProjectIds.has(String(project.proj_id)),
+    );
+  }
+
   const ownerIds = Array.from(
-    new Set((projects ?? []).map((project) => project.owner).filter(Boolean)),
+    new Set(exploreProjects.map((project) => project.owner).filter(Boolean)),
   );
   let usernames: { id: string; username: string | null }[] = [];
 
@@ -47,7 +69,7 @@ export default async function Home() {
   const usernameById = new Map(
     usernames.map((profile) => [profile.id, profile.username]),
   );
-  const projectsWithOwners = (projects ?? []).map((project) => ({
+  const projectsWithOwners = exploreProjects.map((project) => ({
     ...project,
     id: project.proj_id == null ? "" : String(project.proj_id),
     owner_name: usernameById.get(project.owner) ?? null,
