@@ -23,7 +23,10 @@ export default async function OurGoal() {
   }
 
   return (
-    <main id="main-content" className="min-h-screen bg-[#f8f8fc] text-slate-900">
+    <main
+      id="main-content"
+      className="min-h-screen bg-[#f8f8fc] text-slate-900"
+    >
       <OurGoalHeader accountLabel={accountLabel} />
       <div className="relative min-h-64 overflow-hidden bg-slate-950 text-white sm:min-h-80">
         <img
@@ -33,9 +36,6 @@ export default async function OurGoal() {
         />
         <div className="absolute inset-0 bg-slate-950/60" aria-hidden="true" />
         <div className="relative z-10 mx-auto flex min-h-64 max-w-7xl flex-col justify-center px-5 py-8 sm:min-h-80 sm:px-8">
-          <p className="text-sm font-semibold text-indigo-200">
-            Why Atlanticus exists
-          </p>
           <h1 className="mt-2 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
             Our goal
           </h1>
