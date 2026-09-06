@@ -15,6 +15,19 @@ export default async function Home() {
     throw error;
   }
 
+  const { data: { user } } = await supabase.auth.getUser();
+  let accountLabel: string | null = null;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    accountLabel = profile?.display_name?.trim() || user.email || "Account";
+  }
+     
   const ownerIds = Array.from(
     new Set((projects ?? []).map((project) => project.owner).filter(Boolean)),
   );
@@ -38,6 +51,11 @@ export default async function Home() {
     ...project,
     owner_name: usernameById.get(project.owner) ?? null,
   }));
-
-  return <App projects={projectsWithOwners as Project[]} />;
+  
+  return (
+    <App
+      projects={(projectsWithOwners ?? []) as Project[]}
+      accountLabel={accountLabel}
+    />
+  );
 }
