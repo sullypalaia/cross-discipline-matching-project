@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
 import JoinRequestActions from "@/components/JoinRequestActions";
 import { createClient } from "@/utils/supabase/server";
-import JoinRequestActions from "@/components/JoinRequestActions";
 
 type ProjectRecord = {
   proj_id: number | string;
@@ -285,7 +284,7 @@ export default async function DashboardPage() {
                       {request.hours_per_week ?? "—"} hrs/week ·{" "}
                       {request.meeting_modality ?? "Modality not specified"}
                     </p>
-                    <JoinRequestActions requestId={String(request.id)} />
+                    <JoinRequestActions projectId={Number(request.project_id)} requestId={String(request.id)} />
                   </article>
                 );
               })}

@@ -31,19 +31,25 @@ export default function JoinRequestActions({ projectId, requestId }: { projectId
       const nextMemberIds = alreadyMember ? memberIds : [...memberIds, joinRequest.requester_id];
       const nextMemberCount = alreadyMember ? (project.num_members ?? nextMemberIds.length) : (project.num_members ?? memberIds.length) + 1;
 
-      const { error: projectUpdateError } = await supabase
+      const { data: updatedProject, error: projectUpdateError } = await supabase
         .from("user_projects")
         .update({ member_ids: nextMemberIds, num_members: nextMemberCount })
         .eq("proj_id", projectId)
-        .eq("owner", user.id);
+        .eq("owner", user.id)
+        .select("member_ids, num_members")
+        .maybeSingle();
       if (projectUpdateError) throw new Error(projectUpdateError.message);
-      const { error: requestUpdateError } = await supabase
+      if (!updatedProject) throw new Error("The project could not be updated. Check the database update policy for project owners.");
+      const { data: updatedRequest, error: requestUpdateError } = await supabase
         .from("join_requests")
         .update({ status: "approved" })
         .eq("id", requestId)
         .eq("project_id", projectId)
-        .eq("status", "pending");
+        .eq("status", "pending")
+        .select("id, status")
+        .maybeSingle();
       if (requestUpdateError) throw new Error(requestUpdateError.message);
+      if (!updatedRequest) throw new Error("The project was updated, but the join request was not. Check the database update policy for join requests.");
       router.refresh();
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : "Unable to accept this request.");
