@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { MatchResponse, Profile, Project } from "@/app/types/matching";
 import { requestError } from "@/lib/ai/validation";
 
@@ -11,13 +12,6 @@ type Props = {
   // current available Project[] from shared storage; Student 2 supplies the fields.
   profile: Profile | null;
   projects: Project[];
-  // TODO(team integration): Student 1 connects this ID to Student 3's detail
-  // view, e.g. selectProject("solar-car"). No assumed URL or router is used here.
-  onSelectProject: (projectId: string) => void;
-  // TODO(team integration): Student 3 supplies a detail view that accepts the
-  // same stable string ID (e.g. "solar-car") and handles a missing/deleted project.
-  // Student 1 owns the navigation callback above; Student 3 owns the detail UI,
-  // join requests, and acceptance behavior. Remove this TODO after connection.
 };
 
 export default function ProjectMatcher(props: Props) {
@@ -31,7 +25,8 @@ export default function ProjectMatcher(props: Props) {
   );
 }
 
-function MatchingSession({ profile, projects, onSelectProject }: Props) {
+function MatchingSession({ profile, projects }: Props) {
+  const router = useRouter();
   const [result, setResult] = useState<MatchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -195,7 +190,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
                 <button
                   type="button"
                   className="mt-auto pt-5 text-left text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
-                  onClick={() => onSelectProject(match.projectId)}
+                  onClick={() => router.push(`/projects/${encodeURIComponent(match.projectId)}`)}
                 >
                   View project
                 </button>
