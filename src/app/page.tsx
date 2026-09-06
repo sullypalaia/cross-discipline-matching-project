@@ -15,5 +15,23 @@ export default async function Home() {
     throw error;
   }
 
-  return <App projects={(projects ?? []) as Project[]} />;
+  const { data: { user } } = await supabase.auth.getUser();
+  let accountLabel: string | null = null;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    accountLabel = profile?.display_name?.trim() || user.email || "Account";
+  }
+
+  return (
+    <App
+      projects={(projects ?? []) as Project[]}
+      accountLabel={accountLabel}
+    />
+  );
 }

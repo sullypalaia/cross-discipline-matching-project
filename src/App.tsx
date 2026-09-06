@@ -9,9 +9,10 @@ import JoinRequestForm from "./components/JoinRequestForm";
 
 type AppProps = {
   projects: Project[];
+  accountLabel: string | null;
 };
 
-export default function App({ projects }: AppProps) {
+export default function App({ projects, accountLabel }: AppProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   return (
     <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
@@ -45,13 +46,27 @@ export default function App({ projects }: AppProps) {
           </nav>
           <CreateProject
             renderTrigger={(onClick) => (
-              <button
-                type="button"
-                onClick={onClick}
-                className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
-              >
-                Post a project
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onClick}
+                  className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
+                >
+                  Post a project
+                </button>
+                <Link
+                  href={accountLabel ? "/account" : "/login"}
+                  className="flex items-center gap-2 text-sm font-semibold text-slate-700 transition hover:text-slate-950"
+                >
+                  {accountLabel && (
+                    <span
+                      className="size-2 rounded-full bg-emerald-500"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {accountLabel ?? "Login"}
+                </Link>
+              </div>
             )}
           />
         </div>
