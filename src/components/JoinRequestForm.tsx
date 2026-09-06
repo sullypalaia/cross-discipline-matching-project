@@ -46,8 +46,16 @@ export default function JoinRequestForm({ project, accountName = "", onClose, on
     }
   }
 
-  return <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/50 p-4 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="join-request-heading">
-    <div className="mx-auto max-w-3xl rounded-3xl bg-white shadow-2xl">
+  return <div
+    className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-md sm:p-8"
+    role="presentation"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget) {
+        onClose();
+      }
+    }}
+  >
+    <div className="mx-auto max-w-3xl rounded-3xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="join-request-heading">
       <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5"><div><p className="text-sm font-semibold text-indigo-600">Join a project</p><h2 id="join-request-heading" className="mt-1 text-2xl font-bold text-slate-950">{project.title ?? "Project details"}</h2></div><button type="button" onClick={onClose} className="rounded-lg px-2 text-2xl text-slate-400 hover:bg-slate-100" aria-label="Close">×</button></div>
       {sent ? <div className="px-6 py-12 text-center"><div className="mx-auto grid size-14 place-items-center rounded-full bg-emerald-100 text-2xl text-emerald-700">✓</div><h3 className="mt-4 text-xl font-bold text-slate-950">Request sent</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600">{project.owner_name ?? "The project owner"} has been notified and can accept or decline your request from their project dashboard.</p><button type="button" onClick={onClose} className="mt-6 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white">Done</button></div> : <form onSubmit={submit} className="space-y-6 px-6 py-6">
         <div className="rounded-2xl bg-slate-50 p-5"><div className="flex flex-wrap gap-2">{project.tags.map((tag) => <span key={tag} className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">{tag}</span>)}</div><p className="mt-4 text-sm leading-6 text-slate-600">{project.description}</p><p className="mt-3 text-sm font-semibold text-slate-800">Created by {project.owner_name ?? "an unknown collaborator"}</p><div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-3"><span><b className="block text-lg text-slate-950">{project.num_members}</b>current members</span><span><b className="block text-lg text-slate-950">{project.lookingFor.length}</b>open roles</span><span><b className="block text-lg text-slate-950">{project.hours_per_week}</b>expected hours/week</span></div><p className="mt-4 text-sm text-slate-700"><b>Subjects and skills:</b> {project.lookingFor.join(", ")}</p></div>
