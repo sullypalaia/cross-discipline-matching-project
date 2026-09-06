@@ -27,10 +27,12 @@ function safeProjectUrl(value: string | null | undefined) {
 
 type ProjectCardProps = {
   project: Project;
+  showProjectLink?: boolean;
 };
 
 export default function ProjectCard({
   project,
+  showProjectLink = true,
 }: ProjectCardProps) {
   const projectUrl = safeProjectUrl(project.project_url);
   return (
@@ -72,10 +74,13 @@ export default function ProjectCard({
             </span>
           ))}
         </div>
+        <h2 className="mt-4 text-xl font-bold tracking-tight text-slate-950">
+          {project.title ?? "Untitled project"}
+        </h2>
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
           {project.description}
         </p>
-        {projectUrl && (
+        {showProjectLink && projectUrl && (
           <a
             href={projectUrl}
             target="_blank"

@@ -191,6 +191,7 @@ export default async function DashboardPage() {
               <ProjectCard
                 key={project.proj_id}
                 project={toProjectCard(project)}
+                showProjectLink={false}
               />
             ))}
           </DashboardSection>
