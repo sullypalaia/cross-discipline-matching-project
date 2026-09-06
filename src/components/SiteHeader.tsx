@@ -23,8 +23,8 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
     <header className="relative z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 font-bold tracking-tight text-slate-950">
-          <span className="grid size-9 place-items-center rounded-xl bg-indigo-600 text-lg text-white" aria-hidden="true">✦</span>
-          <span className="font-heading">Crosspaths</span>
+          <img src="/icon.svg" alt="" className="size-9 rounded-xl object-cover" aria-hidden="true" />
+          <span className="font-heading">Atlanticus</span>
         </Link>
         <nav className="order-last flex w-full items-center gap-7 text-sm font-medium text-slate-600 md:order-none md:w-auto" aria-label="Main navigation">
           <Link href="/dashboard" className="transition hover:text-slate-950">Dashboard</Link>
