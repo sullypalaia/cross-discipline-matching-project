@@ -89,24 +89,24 @@ export default function App({ projects, accountLabel }: AppProps) {
           />
         </div>
       </header>
-      <div id="top" className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
-        <div className="mb-10 overflow-hidden rounded-3xl bg-slate-950 px-6 py-8 text-white sm:px-10 sm:py-10">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-indigo-300">
-              One idea, many perspectives
-            </p>
-            <p className="mt-3 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-              The right collaborator might be working in a field you have never
-              explored.
-            </p>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300">
-              Crosspaths helps curious people find projects where their skills
-              add a fresh point of view.
-            </p>
-          </div>
+      <div id="top">
+        <div className="relative min-h-64 overflow-hidden bg-slate-950 text-white sm:min-h-80">
+          <img
+            src="https://www.calpoly.edu/sites/default/files/inline-images/glover-event-hero.jpg"
+            alt="Victor Glover floating in space"
+            className="absolute inset-0 size-full object-cover object-[center_28%]"
+          />
+          <div className="absolute inset-0 bg-slate-950/55" aria-hidden="true" />
+          <blockquote className="relative z-10 mx-auto flex min-h-64 max-w-7xl flex-col justify-center px-5 py-8 text-2xl font-semibold leading-tight tracking-tight sm:min-h-80 sm:px-8 sm:text-4xl">
+            <p>“If you want to go fast, go alone. But if you want to go far, go together”</p>
+            <cite className="mt-4 text-sm font-medium not-italic text-slate-200 sm:text-base">
+              — Victor Glover
+            </cite>
+          </blockquote>
         </div>
-        {selectedProject && (
-          <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
+          {selectedProject && (
+            <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
             <p>
               <span className="font-bold">{selectedProject.owner_name ?? "This project"}</span>
               {" is selected. Its full details and join flow can open here"}
@@ -119,16 +119,16 @@ export default function App({ projects, accountLabel }: AppProps) {
             >
               Dismiss
             </button>
+            </div>
+          )}
+          <div id="projects">
+            <ProjectFeed
+              projects={projects}
+              selectedProject={selectedProject ?? undefined}
+              onSelectProject={setSelectedProject}
+            />
           </div>
-        )}
-        <div id="projects">
-          <ProjectFeed
-            projects={projects}
-            selectedProject={selectedProject ?? undefined}
-            onSelectProject={setSelectedProject}
-          />
-        </div>
-        <div id="profile" className="mt-10 space-y-6 rounded-3xl bg-white p-6">
+          <div id="profile" className="mt-10 space-y-6 rounded-3xl bg-white p-6">
           <h2 className="text-2xl font-bold">Your profile and project matches</h2>
           <p className="text-sm text-slate-600">Your profile is saved for this visit only and resets when you refresh.</p>
           <ProfileForm initialProfile={profile} onSave={setProfile} />
@@ -139,6 +139,7 @@ export default function App({ projects, accountLabel }: AppProps) {
           <ProjectMatcher profile={profile} projects={matchingProjects}
             onSelectProject={(id) => setSelectedProject(projects.find((project) => String(project.id) === id) ?? null)} />
           <FacultyFinder />
+          </div>
         </div>
       </div>
       {selectedProject && (
