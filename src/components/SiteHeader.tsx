@@ -1,24 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import CreateProject from "./CreateProject";
 
 type SiteHeaderProps = { accountLabel: string | null };
 
 export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
   const initial = accountLabel?.trim().charAt(0).toUpperCase() || "→";
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <header className="relative z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 font-bold tracking-tight text-slate-950">
           <span className="grid size-9 place-items-center rounded-xl bg-indigo-600 text-lg text-white" aria-hidden="true">✦</span>
-          Crosspaths
+          <span className="font-heading">Crosspaths</span>
         </Link>
         <nav className="order-last flex w-full items-center gap-7 text-sm font-medium text-slate-600 md:order-none md:w-auto" aria-label="Main navigation">
           <Link href="/" className="transition hover:text-slate-950">Explore</Link>
-          <Link href="/our-goal" className="transition hover:text-slate-950">Our goal</Link>
           <Link href="/matches" className="transition hover:text-slate-950">Find matches</Link>
+          <Link href="/our-goal" className="transition hover:text-slate-950">Our goal</Link>
         </nav>
         <div className="flex items-center gap-3">
           <CreateProject
@@ -30,9 +32,7 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
               </button>
             )}
           />
-          <Link href={accountLabel ? "/account" : "/login"} title={accountLabel ? "Open account" : "Sign in"} aria-label={accountLabel ? "Open account" : "Sign in"} className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            {initial}
-          </Link>
+          {accountLabel ? <div className="relative"><button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Open account menu" aria-expanded={menuOpen} aria-haspopup="menu" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</button>{menuOpen && <div role="menu" className="absolute right-0 top-12 z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10"><Link role="menuitem" href="/my-projects" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">My projects</Link><Link role="menuitem" href="/account" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Account</Link></div>}</div> : <Link href="/login" title="Sign in" aria-label="Sign in" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</Link>}
         </div>
       </div>
     </header>

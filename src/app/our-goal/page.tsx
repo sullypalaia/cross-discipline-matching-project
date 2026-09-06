@@ -25,42 +25,36 @@ export default async function OurGoal() {
   return (
     <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <OurGoalHeader accountLabel={accountLabel} />
-
-      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-24">
-        <div className="mb-12 max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">
+      <div className="relative min-h-64 overflow-hidden bg-slate-950 text-white sm:min-h-80">
+        <img
+          src={campusImage}
+          alt="A scenic view of Cal Poly's campus"
+          className="absolute inset-0 size-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-slate-950/60" aria-hidden="true" />
+        <div className="relative z-10 mx-auto flex min-h-64 max-w-7xl flex-col justify-center px-5 py-8 sm:min-h-80 sm:px-8">
+          <p className="text-sm font-semibold text-indigo-200">
             Why Crosspaths exists
           </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 sm:text-6xl">
-            Our Goal
+          <h1 className="mt-2 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            Our goal
           </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-100 sm:text-base">
+            Building a more connected campus, one unlikely collaboration at a
+            time.
+          </p>
         </div>
-
-        <div className="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
-          <div className="max-w-xl">
-            <p className="text-xl leading-9 text-slate-600 sm:text-2xl sm:leading-10">
-              Our goal is to help Cal Poly students find meaningful
-              collaborations beyond the boundaries of their major. Crosspaths
-              brings different skills, ideas, and perspectives together so
-              students can turn curious questions into hands-on projects. By
-              making it easier to discover the right people, we hope to build a
-              more connected campus where everyone has a chance to learn by
-              doing.
-            </p>
-          </div>
-
-          <div>
-            <div
-              className="group overflow-hidden rounded-[2rem] border-8 border-white bg-slate-200 shadow-2xl shadow-indigo-950/15 transition duration-500 ease-out hover:scale-[1.03] hover:border-indigo-100 hover:shadow-indigo-950/25"
-              role="img"
-              aria-label="A scenic view of Cal Poly's campus"
-            >
-              <div
-                className="aspect-[4/3] bg-cover bg-center transition duration-700 ease-out group-hover:scale-105"
-                style={{ backgroundImage: `url("${campusImage}")` }}
-              />
-            </div>
-          </div>
+      </div>
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
+        <div className="max-w-3xl rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-10">
+          <p className="text-lg leading-9 text-slate-600 sm:text-xl sm:leading-10">
+            Our goal is to help Cal Poly students find meaningful collaborations
+            beyond the boundaries of their major. Crosspaths brings different
+            skills, ideas, and perspectives together so students can turn
+            curious questions into hands-on projects. By making it easier to
+            discover the right people, we hope to build a more connected campus
+            where everyone has a chance to learn by doing.
+          </p>
         </div>
       </section>
     </main>
