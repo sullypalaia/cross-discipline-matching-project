@@ -1,6 +1,6 @@
 import "server-only";
 // KEEP: This sample algorithm powers real matching requests; it is not demo data.
-// Student 4 owns any future AI replacement. Students 1–3 only integrate the inputs
+// Student 4 owns the AI wrapper in recommendProjects.ts. Students 1–3 integrate inputs
 // and callbacks; deleting this function breaks /api/match.
 import type { Match, Profile, Project } from "@/app/types/matching";
 
@@ -8,8 +8,7 @@ const normalize = (value: string) => value.trim().toLowerCase();
 
 // Sample mode: exact skill overlap (3 points) and interest phrases (1 point).
 // Availability is a hard filter; ties retain the supplied project order.
-// Future provider replacement belongs here, on the server. Keep validating IDs
-// and explanations against supplied projects; never expose credentials to clients.
+// recommendProjects.ts calls these rules when no key exists or OpenAI fails.
 export async function matchProjects(profile: Profile, projects: Project[]): Promise<Match[]> {
   const skills = new Set(profile.skills.map(normalize));
   const interests = [...new Set(profile.interests.map(normalize))];
