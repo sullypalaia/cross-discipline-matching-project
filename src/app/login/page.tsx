@@ -62,7 +62,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative grid min-h-screen place-items-center bg-[#f8f8fc] p-5">
+    <main id="main-content" className="relative grid min-h-screen place-items-center bg-[#f8f8fc] p-5">
       <button
         type="button"
         onClick={() => router.back()}
@@ -108,7 +108,7 @@ export default function LoginPage() {
           <form className="mt-7 space-y-5" onSubmit={verifyCode}>
             <label className="block text-sm font-semibold text-slate-800" htmlFor="code">
               One-time code
-              <input id="code" inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={12} value={code} onChange={(event) => setCode(event.target.value.replace(/\s/g, ""))} placeholder="123456" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-mono text-lg tracking-[0.3em] text-slate-950 outline-none transition placeholder:tracking-normal placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
+              <input id="code" inputMode="numeric" autoComplete="one-time-code" required minLength={6} maxLength={12} value={code} onChange={(event) => setCode(event.target.value.replace(/\s/g, ""))} placeholder="12345678" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-mono text-lg tracking-[0.3em] text-slate-950 outline-none transition placeholder:tracking-normal placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
             </label>
             <button disabled={loading} type="submit" className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">{loading ? "Verifying…" : "Sign in"}</button>
             <button type="button" disabled={loading} onClick={() => { setStep("email"); setCode(""); setError(""); setMessage(""); }} className="w-full text-sm font-semibold text-indigo-600 hover:text-indigo-800">Use a different email</button>

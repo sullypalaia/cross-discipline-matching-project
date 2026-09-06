@@ -25,7 +25,7 @@ export default async function MyProjectsPage() {
   const accountLabel = profile?.display_name?.trim() || user.email || "Account";
 
   return (
-    <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
+    <main id="main-content" className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <SiteHeader accountLabel={accountLabel} />
       <section className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
         <p className="text-sm font-semibold text-indigo-600">Your work</p>

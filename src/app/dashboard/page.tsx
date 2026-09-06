@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   const accountLabel = profile?.display_name?.trim() || user.email || "Account";
 
   return (
-    <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
+    <main id="main-content" className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <SiteHeader accountLabel={accountLabel} />
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="max-w-2xl">

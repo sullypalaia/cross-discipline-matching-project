@@ -23,7 +23,7 @@ export default async function OurGoal() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
+    <main id="main-content" className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <OurGoalHeader accountLabel={accountLabel} />
       <div className="relative min-h-64 overflow-hidden bg-slate-950 text-white sm:min-h-80">
         <img

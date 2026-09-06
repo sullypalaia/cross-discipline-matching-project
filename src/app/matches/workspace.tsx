@@ -7,9 +7,9 @@ import FacultyFinder from "@/components/ai/FacultyFinder";
 import type { Profile, Project } from "@/app/types/matching";
 import { createClient } from "@/utils/supabase/clients";
 
-type Props = { initialProfile: Profile | null; projects: Project[]; userId: string };
+type Props = { initialProfile: Profile | null; projects: Project[]; userId: string; displayName: string };
 
-export default function MatchesWorkspace({ initialProfile, projects, userId }: Props) {
+export default function MatchesWorkspace({ initialProfile, projects, userId, displayName }: Props) {
   const [profile, setProfile] = useState<Profile | null>(initialProfile);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
@@ -22,6 +22,7 @@ export default function MatchesWorkspace({ initialProfile, projects, userId }: P
     try {
     const { error } = await createClient().from("profiles").upsert({
       id: userId,
+      display_name: displayName,
       skills: nextProfile.skills,
       interests: nextProfile.interests,
       hours_per_week: nextProfile.hoursPerWeek,
