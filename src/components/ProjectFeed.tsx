@@ -47,14 +47,11 @@ export default function ProjectFeed({
     <section aria-labelledby="project-feed-heading">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="text-sm font-semibold text-indigo-600">
-            Explore opportunities
-          </p>
           <h1
             id="project-feed-heading"
             className="mt-1 text-3xl font-bold tracking-tight text-slate-950"
           >
-            Find your next collaboration
+          Find your team.
           </h1>
           <p className="mt-2 max-w-xl text-slate-600">
             Meet people from different disciplines and turn a promising idea

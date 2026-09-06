@@ -30,7 +30,7 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
               </button>
             )}
           />
-          <Link href={accountLabel ? "/account" : "/login"} title={accountLabel ?? "Sign in"} aria-label={accountLabel ? `Open ${accountLabel}'s account` : "Sign in"} className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          <Link href={accountLabel ? "/account" : "/login"} title={accountLabel ? "Open account" : "Sign in"} aria-label={accountLabel ? "Open account" : "Sign in"} className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
             {initial}
           </Link>
         </div>
