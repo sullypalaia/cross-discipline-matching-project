@@ -83,8 +83,8 @@ export default function LoginPage() {
       </button>
       <section className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-200/60 sm:p-9">
         <Link href="/" className="flex items-center gap-2.5 font-bold tracking-tight text-slate-950">
-          <span className="grid size-9 place-items-center rounded-xl bg-indigo-600 text-lg text-white" aria-hidden="true">✦</span>
-          Crosspaths
+          <img src="/icon.svg" alt="" className="size-9 rounded-xl object-cover" aria-hidden="true" />
+          Atlanticus
         </Link>
         <p className="mt-8 text-sm font-semibold text-indigo-600">Welcome</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">

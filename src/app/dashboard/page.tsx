@@ -116,7 +116,7 @@ export default async function DashboardPage() {
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">
-            Your Crosspaths activity
+            Your Atlanticus activity
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-950">
             Dashboard
