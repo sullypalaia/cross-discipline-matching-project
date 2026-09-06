@@ -49,6 +49,7 @@ export default async function Home() {
   );
   const projectsWithOwners = (projects ?? []).map((project) => ({
     ...project,
+    id: project.proj_id == null ? "" : String(project.proj_id),
     owner_name: usernameById.get(project.owner) ?? null,
   }));
   

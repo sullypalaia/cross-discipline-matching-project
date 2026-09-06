@@ -55,7 +55,9 @@ export default function LoginPage() {
       return;
     }
 
-    router.replace("/account");
+    // Only allow this known destination; never redirect to arbitrary query URLs.
+    const returnToMatches = new URLSearchParams(window.location.search).get("next") === "matches";
+    router.replace(returnToMatches ? "/matches" : "/account");
     router.refresh();
   }
 

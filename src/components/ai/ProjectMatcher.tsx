@@ -36,7 +36,11 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
   useEffect(() => () => { active.current?.abort(); }, []);
 
   async function findMatches() {
-    if (active.current || problem || projects.length === 0) return;
+    if (active.current) return;
+    if (problem || projects.length === 0) {
+      setError(problem || "No valid projects are available to match yet.");
+      return;
+    }
     const controller = new AbortController();
     active.current = controller;
     const timeout = setTimeout(() => controller.abort(), 20000);
@@ -83,7 +87,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
       </p>}
       {problem && <p className="mt-4" role="status">{problem}</p>}
       {!projects.length && <p className="mt-4">No projects are available yet. Check back after students post projects.</p>}
-      <button type="button" onClick={findMatches} disabled={loading || !!problem || !projects.length}
+      <button type="button" onClick={findMatches} disabled={loading}
         className="mt-5 rounded-full bg-foreground px-5 py-3 text-background disabled:opacity-50">
         {loading ? "Finding matches…" : error ? "Retry matching" : "Find my matches"}
       </button>
