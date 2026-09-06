@@ -178,8 +178,9 @@ export default function AccountProfile({
   initialProfile,
 }: Props) {
   const router = useRouter();
+  const fallbackDisplayName = email.split("@")[0] || "Collaborator";
   const [profile, setProfile] = useState({
-    display_name: initialProfile?.display_name ?? "",
+    display_name: initialProfile?.display_name?.trim() || fallbackDisplayName,
     bio: initialProfile?.bio ?? "",
     disciplines: initialProfile?.disciplines ?? [],
     skills: initialProfile?.skills ?? [],
@@ -196,6 +197,11 @@ export default function AccountProfile({
     setError("");
     setStatus("");
     let value: string | string[] | number | null = draft.trim() || null;
+    if (field === "display_name" && !value) {
+      setSaving(false);
+      setError("Name is required.");
+      return;
+    }
     if (field === "disciplines" || field === "skills" || field === "interests")
       value = toList(draft);
     if (field === "hours_per_week") {
@@ -213,6 +219,10 @@ export default function AccountProfile({
       .from("profiles")
       .upsert({
         id: userId,
+        display_name:
+          field === "display_name" ?
+            String(value).trim()
+          : profile.display_name.trim() || fallbackDisplayName,
         [field]: value,
         updated_at: new Date().toISOString(),
       });
@@ -242,12 +252,14 @@ export default function AccountProfile({
   };
 
   return (
-    <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
+    <main
+      id="main-content"
+      className="min-h-screen bg-[#f8f8fc] text-slate-900"
+    >
       <SiteHeader accountLabel={profile.display_name.trim() || email} />
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div>
-            <p className="text-sm font-semibold text-indigo-600">Account</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">
               Your profile
             </h1>

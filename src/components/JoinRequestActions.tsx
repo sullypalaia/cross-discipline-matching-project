@@ -37,7 +37,6 @@ export default function JoinRequestActions({ projectId, requestId }: { projectId
         .eq("proj_id", projectId)
         .eq("owner", user.id);
       if (projectUpdateError) throw new Error(projectUpdateError.message);
-
       const { error: requestUpdateError } = await supabase
         .from("join_requests")
         .update({ status: "approved" })

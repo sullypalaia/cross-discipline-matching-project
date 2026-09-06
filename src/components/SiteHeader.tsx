@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateProject from "./CreateProject";
 
 type SiteHeaderProps = { accountLabel: string | null };
@@ -10,12 +10,21 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
   const initial = accountLabel?.trim().charAt(0).toUpperCase() || "→";
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
   return (
     <header className="relative z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 font-bold tracking-tight text-slate-950">
-          <span className="grid size-9 place-items-center rounded-xl bg-indigo-600 text-lg text-white" aria-hidden="true">✦</span>
-          <span className="font-heading">Crosspaths</span>
+          <img src="/icon.svg" alt="" className="size-9 rounded-xl object-cover" aria-hidden="true" />
+          <span className="font-heading">Atlanticus</span>
         </Link>
         <nav className="order-last flex w-full items-center gap-7 text-sm font-medium text-slate-600 md:order-none md:w-auto" aria-label="Main navigation">
           <Link href="/dashboard" className="transition hover:text-slate-950">Dashboard</Link>
@@ -33,7 +42,7 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
               </button>
             )}
           />
-          {accountLabel ? <div className="relative"><button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Open account menu" aria-expanded={menuOpen} aria-haspopup="menu" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</button>{menuOpen && <div role="menu" className="absolute right-0 top-12 z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10"><Link role="menuitem" href="/my-projects" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">My projects</Link><Link role="menuitem" href="/account" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Account</Link></div>}</div> : <Link href="/login" title="Sign in" aria-label="Sign in" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</Link>}
+          {accountLabel ? <div className="relative"><button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Open account menu" aria-expanded={menuOpen} aria-controls="account-options" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</button>{menuOpen && <div id="account-options" aria-label="Account options" className="absolute right-0 top-12 z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10"><Link href="/my-projects" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">My projects</Link><Link href="/account" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Account</Link></div>}</div> : <Link href="/login" title="Sign in" aria-label="Sign in" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</Link>}
         </div>
       </div>
     </header>
