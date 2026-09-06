@@ -108,13 +108,13 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
         <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
           Projects for you
         </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+        <p className="mt-3 max-w-2xl text-sm text-pretty leading-6 text-slate-600">
           Find projects that fit your skills, interests, and weekly hours. Uses
           AI when available, otherwise rule-based pairing.
         </p>
       </div>
       <div className="px-6 py-6 sm:px-8">
-        <p className="text-sm leading-6 text-slate-500">
+        <p className="text-sm leading-6 text-pretty text-slate-500">
           When AI is enabled, your saved skills, interests, availability, and
           project descriptions are sent to OpenAI when you find matches.
         </p>
@@ -164,7 +164,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
             {error}
           </p>
         )}
-        <p role="status" className="mt-4 text-sm text-slate-600">
+        <p role="status" className="text-pretty mt-4 text-sm text-slate-600">
           {loading ?
             "Comparing your profile with available projects…"
           : result ?

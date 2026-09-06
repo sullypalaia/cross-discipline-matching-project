@@ -56,7 +56,7 @@ export default function FacultyFinder() {
         <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
           Find Cal Poly faculty
         </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-pretty text-slate-600">
           Describe any project area. AI searches official Cal Poly pages across
           departments, reads published faculty information, and ranks relevant
           people. Suggestions do not imply availability or an agreement to
@@ -64,7 +64,7 @@ export default function FacultyFinder() {
         </p>
       </div>
       <div className="space-y-5 px-6 py-6 sm:px-8">
-        <p className="text-sm leading-6 text-slate-500">
+        <p className="text-sm leading-6 text-slate-500 text-pretty">
           Your topic is sent to OpenAI for web search and ranking. Research may
           take up to a minute. Without AI, we search department listings in the
           broader faculty catalog.
@@ -174,7 +174,7 @@ export default function FacultyFinder() {
             ))}
           </ul>
         )}
-        <p className="text-sm leading-6 text-slate-500">
+        <p className="text-sm leading-6 text-slate-500 text-pretty">
           Search covers official Cal Poly domains, not just a preset list of
           majors. Web coverage is not exhaustive; catalog fallback may be cached
           for one hour. Verify AI interpretations on the linked sources.
