@@ -6,7 +6,7 @@ import { createClient } from "../utils/supabase/clients";
 
 type JoinRequestFormProps = { project: Project; accountName?: string; onClose: () => void; onSubmitted?: () => void };
 
-export default function JoinRequestForm({ project, accountName = "Alex Morgan", onClose, onSubmitted }: JoinRequestFormProps) {
+export default function JoinRequestForm({ project, accountName = "", onClose, onSubmitted }: JoinRequestFormProps) {
   const [name, setName] = useState(accountName);
   const [why, setWhy] = useState("");
   const [help, setHelp] = useState("");
