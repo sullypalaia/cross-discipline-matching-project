@@ -75,9 +75,9 @@ export default function App({ projects }: AppProps) {
         {selectedProject && (
           <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
             <p>
-              <span className="font-bold">{selectedProject.owner}</span>
-              &apos;s project is selected. Its full details and join flow can
-              open here when those views are connected.
+              <span className="font-bold">{selectedProject.owner_name ?? "This project"}</span>
+              {" is selected. Its full details and join flow can open here"}
+              when those views are connected.
             </p>
             <button
               type="button"
