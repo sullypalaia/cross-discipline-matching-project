@@ -115,7 +115,17 @@ export default async function ProjectPage({
           href="/#projects"
           className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
         >
-          <span aria-hidden="true">←</span> Back to Explore
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="size-4"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m15 18-6-6 6-6" />
+          </svg>
+          Back to Explore
         </Link>
         <article className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div className="bg-gradient-to-br from-indigo-50 via-white to-white px-6 py-8 sm:px-9 sm:py-10">
@@ -135,6 +145,9 @@ export default async function ProjectPage({
             <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
               {project.description}
             </p>
+            <p className="mt-4 text-sm text-slate-500">
+              Posted {new Date(project.created_at).toLocaleDateString()}
+            </p>
             {projectUrl && (
               <a
                 href={projectUrl}
@@ -142,7 +155,17 @@ export default async function ProjectPage({
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
               >
-                Visit project link <span aria-hidden="true">↗</span>
+                Visit project link
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="size-4"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 17 17 7M9 7h8v8" />
+                </svg>
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
@@ -167,15 +190,6 @@ export default async function ProjectPage({
                   Open to collaborators with a range of skills.
                 </p>
               }
-              <div className="mt-8 border-t border-slate-100 pt-6">
-                <h2 className="text-lg font-bold text-slate-950">Created by</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  {project.owner_name ?? "Unknown collaborator"}
-                </p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Posted {new Date(project.created_at).toLocaleDateString()}
-                </p>
-              </div>
               <div className="mt-8 border-t border-slate-100 pt-6">
                 <h2 className="text-lg font-bold text-slate-950">
                   Team members
