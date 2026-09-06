@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { createClient } from "@/utils/supabase/clients";
 import SkillSuggestions from "./ai/SkillSuggestions";
+import { projectTagPresets } from "@/lib/projectTags";
 
 export type Project = {
   title: string;
@@ -18,13 +19,7 @@ type CreateProjectProps = {
   renderTrigger?: (onClick: () => void) => ReactNode;
 };
 
-const suggestedTags = [
-  "Not started yet",
-  "In progress",
-  "Finished",
-  "Looking for teammates",
-  "Open to collaborators",
-];
+const suggestedTags = projectTagPresets;
 
 const tagStyles: Record<string, string> = {
   "Not started yet": "border-slate-200 bg-slate-50 text-slate-700",
