@@ -6,14 +6,10 @@ import { projectTagPresets } from "@/lib/projectTags";
 
 type ProjectFeedProps = {
   projects: Project[];
-  selectedProject?: Project;
-  onSelectProject: (project: Project) => void;
 };
 
 export default function ProjectFeed({
   projects,
-  selectedProject,
-  onSelectProject,
 }: ProjectFeedProps) {
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -132,8 +128,6 @@ export default function ProjectFeed({
             <ProjectCard
               key={`${project.owner}-${project.created_at}`}
               project={project}
-              isSelected={selectedProject === project}
-              onSelect={onSelectProject}
             />
           ))}
         </div>

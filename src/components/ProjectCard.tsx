@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 export type Project = {
   id: string;
   title?: string;
@@ -26,19 +27,15 @@ function safeProjectUrl(value: string | null | undefined) {
 
 type ProjectCardProps = {
   project: Project;
-  isSelected?: boolean;
-  onSelect: (project: Project) => void;
 };
 
 export default function ProjectCard({
   project,
-  isSelected = false,
-  onSelect,
 }: ProjectCardProps) {
   const projectUrl = safeProjectUrl(project.project_url);
   return (
     <article
-      className={`group flex h-full flex-col rounded-3xl border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70 ${isSelected ? "border-indigo-500 ring-2 ring-indigo-100" : "border-slate-200"}`}
+      className="group flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -106,13 +103,12 @@ export default function ProjectCard({
           <span aria-hidden="true">◉</span> {project.num_members} members
         </span>
       </div>
-      <button
-        type="button"
-        onClick={() => onSelect(project)}
+      <Link
+        href={`/projects/${encodeURIComponent(project.id)}`}
         className="mt-5 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        {isSelected ? "Selected" : "View project"}
-      </button>
+        View project
+      </Link>
     </article>
   );
 }

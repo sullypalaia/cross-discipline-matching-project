@@ -1,9 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import ProjectFeed from "./components/ProjectFeed";
 import type { Project } from "./components/ProjectCard";
-import JoinRequestForm from "./components/JoinRequestForm";
 import SiteHeader from "./components/SiteHeader";
 
 type AppProps = {
@@ -12,7 +8,6 @@ type AppProps = {
 };
 
 export default function App({ projects, accountLabel }: AppProps) {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   return (
     <main id="main-content" className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <SiteHeader accountLabel={accountLabel} />
@@ -32,38 +27,11 @@ export default function App({ projects, accountLabel }: AppProps) {
           </blockquote>
         </div>
         <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
-          {selectedProject && (
-            <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              <span className="font-bold">{selectedProject.owner_name ?? "This project"}</span>
-              {" is selected. Its full details and join flow can open here"}
-              when those views are connected.
-            </p>
-            <button
-              type="button"
-              onClick={() => setSelectedProject(null)}
-              className="shrink-0 font-semibold text-indigo-700 hover:text-indigo-950"
-            >
-              Dismiss
-            </button>
-            </div>
-          )}
           <div id="projects">
-            <ProjectFeed
-              projects={projects}
-              selectedProject={selectedProject ?? undefined}
-              onSelectProject={setSelectedProject}
-            />
+            <ProjectFeed projects={projects} />
           </div>
         </div>
       </div>
-      {selectedProject && (
-        <JoinRequestForm
-          project={selectedProject}
-          accountName={accountLabel ?? ""}
-          onClose={() => setSelectedProject(null)}
-        />
-      )}
     </main>
   );
 }

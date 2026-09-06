@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
 import JoinRequestActions from "@/components/JoinRequestActions";
+import ProjectCard, { type Project } from "@/components/ProjectCard";
 import { createClient } from "@/utils/supabase/server";
 
 type ProjectRecord = {
@@ -16,6 +17,7 @@ type ProjectRecord = {
   owner?: string | null;
   owner_name?: string | null;
   created_at?: string | null;
+  project_url?: string | null;
   member_ids?: string[] | null;
 };
 
@@ -38,6 +40,22 @@ type JoinRequestRecord = {
 
 function projectName(project: ProjectRecord) {
   return project.title?.trim() || "Untitled project";
+}
+
+function toProjectCard(project: ProjectRecord): Project {
+  return {
+    id: String(project.proj_id),
+    title: projectName(project),
+    description: project.description ?? "No project description provided.",
+    tags: project.tags ?? [],
+    owner: project.owner ?? "",
+    owner_name: project.owner_name ?? null,
+    project_url: project.project_url ?? null,
+    lookingFor: project.lookingFor ?? project.looking_for ?? [],
+    hours_per_week: Number(project.hours_per_week) || 0,
+    num_members: Number(project.num_members) || 1,
+    created_at: project.created_at ?? new Date(0).toISOString(),
+  };
 }
 
 function statusStyles(status: JoinRequestRecord["status"]) {
@@ -169,48 +187,12 @@ export default async function DashboardPage() {
             emptyMessage="Create a project or get accepted to one to see it here."
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {activeProjects.map((project) => {
-              const isOwner = project.owner === user.id;
-              return (
-                <article
-                  key={project.proj_id}
-                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${isOwner ? "bg-indigo-50 text-indigo-700" : "bg-emerald-50 text-emerald-700"}`}
-                    >
-                      {isOwner ? "Your project" : "Joined project"}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {project.num_members ?? 1} members
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-xl font-bold text-slate-950">
-                    {projectName(project)}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Owner:{" "}
-                    <span className="font-semibold text-slate-700">
-                      {isOwner ? "You" : project.owner_name || "Project owner"}
-                    </span>
-                  </p>
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
-                    {project.description || "No project description provided."}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {(project.tags ?? []).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              );
-            })}
+            {activeProjects.map((project) => (
+              <ProjectCard
+                key={project.proj_id}
+                project={toProjectCard(project)}
+              />
+            ))}
           </DashboardSection>
 
           <div className="grid gap-8 lg:grid-cols-2">

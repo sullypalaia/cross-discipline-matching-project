@@ -14,8 +14,8 @@ import ProjectMatcher from "@/components/ai/ProjectMatcher";
 import FacultyFinder from "@/components/ai/FacultyFinder";
 import type { Profile, Project } from "@/app/types/matching";
 
-// DELETE WITH THIS DEMO: fictional sampleProjects, local profile/selection state,
-// empty-project checkbox, saved-profile message, and selection confirmation panel.
+// DELETE WITH THIS DEMO: fictional sampleProjects, local profile state,
+// empty-project checkbox, and saved-profile message.
 // Do not copy these into shared storage. Student 2 owns real project creation.
 // Test fixtures only. No shared storage, database, or browser storage is used.
 const sampleProjects: Project[] = [
@@ -47,8 +47,6 @@ export default function MatchingDemo() {
   // and Project[] with shared state when placing the components in the real app.
   const [profile, setProfile] = useState<Profile | null>(null);
   const [empty, setEmpty] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = sampleProjects.find((project) => project.id === selectedId);
 
   return (
     <main id="main-content" className="mx-auto w-full max-w-3xl space-y-6 p-6 sm:p-10">
@@ -65,22 +63,11 @@ export default function MatchingDemo() {
       </p>
 
       <label className="flex items-center gap-3">
-        <input type="checkbox" checked={empty} onChange={(event) => { setEmpty(event.target.checked); setSelectedId(null); }} />
+        <input type="checkbox" checked={empty} onChange={(event) => setEmpty(event.target.checked)} />
         Test with no available projects
       </label>
-      <ProjectMatcher profile={profile} projects={empty ? [] : sampleProjects} onSelectProject={setSelectedId} />
+      <ProjectMatcher profile={profile} projects={empty ? [] : sampleProjects} />
       <FacultyFinder />
-
-      {/* TODO(team integration): Student 1 connects onSelectProject(id) to
-          Student 3's actual detail view. This panel only confirms the received ID. */}
-      {selected && (
-        <section className="rounded-xl border border-zinc-300 p-6 dark:border-zinc-700" aria-label="Demo project selection">
-          <h2 className="text-xl font-semibold">Selection callback worked</h2>
-          <p className="mt-2">{selected.title}</p>
-          <p className="mt-2">Received project ID: <code>{selected.id}</code></p>
-          <p className="mt-2 text-sm">This is a demo confirmation. The real project detail page will be connected by your teammates.</p>
-        </section>
-      )}
 
       <details className="rounded-xl border border-zinc-300 p-4 dark:border-zinc-700">
         <summary className="cursor-pointer font-semibold">See the three sample projects</summary>

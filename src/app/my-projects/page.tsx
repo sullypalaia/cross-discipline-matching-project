@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
 import { createClient } from "@/utils/supabase/server";
@@ -111,6 +112,12 @@ export default async function MyProjectsPage() {
                       " · ",
                     ) || "Open to collaboration"}
                   </p>
+                  <Link
+                    href={`/projects/${encodeURIComponent(project.projectId)}`}
+                    className="mt-5 inline-flex text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
+                  >
+                    View project →
+                  </Link>
                 </article>
               );
             })}
