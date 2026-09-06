@@ -16,6 +16,9 @@ export async function POST(request: NextRequest, context: { params: Promise<{ pr
   if (!project) return Response.json({ error: "This project no longer exists." }, { status: 404 });
 
   const { data: requestRecord, error } = await supabase.from("join_requests").insert({ project_id: projectId, requester_id: user.id, applicant_name: body.name.trim(), motivation: body.why.trim(), contribution: body.help.trim(), hours_per_week: body.hoursPerWeek, meeting_modality: body.modality, status: "pending" }).select().single();
-  if (error) return Response.json({ error: "Unable to save your request. Please try again." }, { status: 500 });
+  if (error) {
+    console.error("Unable to save join request", error);
+    return Response.json({ error: `Unable to save your request: ${error.message}` }, { status: 500 });
+  }
   return Response.json(requestRecord, { status: 201 });
 }

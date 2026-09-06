@@ -18,6 +18,7 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
           <span className="font-heading">Crosspaths</span>
         </Link>
         <nav className="order-last flex w-full items-center gap-7 text-sm font-medium text-slate-600 md:order-none md:w-auto" aria-label="Main navigation">
+          <Link href="/dashboard" className="transition hover:text-slate-950">Dashboard</Link>
           <Link href="/" className="transition hover:text-slate-950">Explore</Link>
           <Link href="/matches" className="transition hover:text-slate-950">Find matches</Link>
           <Link href="/our-goal" className="transition hover:text-slate-950">Our goal</Link>

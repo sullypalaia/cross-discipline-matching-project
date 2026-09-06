@@ -1,12 +1,13 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Project } from "./ProjectCard";
-import { createClient } from "../utils/supabase/clients";
 
 type JoinRequestFormProps = { project: Project; accountName?: string; onClose: () => void; onSubmitted?: () => void };
 
 export default function JoinRequestForm({ project, accountName = "", onClose, onSubmitted }: JoinRequestFormProps) {
+  const router = useRouter();
   const [name, setName] = useState(accountName);
   const [why, setWhy] = useState("");
   const [help, setHelp] = useState("");
@@ -23,22 +24,22 @@ export default function JoinRequestForm({ project, accountName = "", onClose, on
     setError("");
     setSubmitting(true);
     try {
-      const supabase = createClient();
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user) throw new Error("You must be signed in to request to join a project.");
-
-      const { error: insertError } = await supabase.from("join_requests").insert({
-        project_id: project.id,
-        requester_id: user.id,
-        applicant_name: name.trim(),
-        motivation: why.trim(),
-        contribution: help.trim(),
-        hours_per_week: commitment,
-        meeting_modality: modality,
-        status: "pending",
+      const response = await fetch(`/api/projects/${encodeURIComponent(project.id)}/join-requests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          why: why.trim(),
+          help: help.trim(),
+          hoursPerWeek: commitment,
+          modality,
+        }),
       });
-      if (insertError) throw new Error(insertError.message);
-      setSent(true); onSubmitted?.();
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || "We could not send your request.");
+      setSent(true);
+      router.refresh();
+      onSubmitted?.();
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : "We could not send your request.");
     } finally {
