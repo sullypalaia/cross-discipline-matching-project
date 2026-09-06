@@ -20,7 +20,9 @@ export default function ProjectFeed({
   const tags = useMemo(
     () => [
       allTags,
-      ...Array.from(new Set(projects.flatMap((project) => project.tags))).sort(),
+      ...Array.from(
+        new Set(projects.flatMap((project) => project.tags)),
+      ).sort(),
     ],
     [projects],
   );
@@ -38,8 +40,7 @@ export default function ProjectFeed({
         .join(" ")
         .toLowerCase();
       return (
-        matchesTag &&
-        (!normalizedQuery || searchable.includes(normalizedQuery))
+        matchesTag && (!normalizedQuery || searchable.includes(normalizedQuery))
       );
     });
   }, [projects, query, tag]);
@@ -51,9 +52,9 @@ export default function ProjectFeed({
             id="project-feed-heading"
             className="mt-1 text-3xl font-bold tracking-tight text-slate-950"
           >
-          Find your team.
+            Find your team.
           </h1>
-          <p className="mt-2 max-w-xl text-slate-600">
+          <p className="mt-2 max-w-xl text-pretty text-slate-600">
             Meet people from different disciplines and turn a promising idea
             into something real.
           </p>

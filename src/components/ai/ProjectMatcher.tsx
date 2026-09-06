@@ -23,7 +23,12 @@ type Props = {
 export default function ProjectMatcher(props: Props) {
   // Any changed input remounts the session, hiding stale results immediately and
   // aborting the old request. Equal data in a new array does not clear results.
-  return <MatchingSession key={JSON.stringify([props.profile, props.projects])} {...props} />;
+  return (
+    <MatchingSession
+      key={JSON.stringify([props.profile, props.projects])}
+      {...props}
+    />
+  );
 }
 
 function MatchingSession({ profile, projects, onSelectProject }: Props) {
@@ -33,7 +38,12 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
   const active = useRef<AbortController | null>(null);
   const problem = requestError({ profile, projects });
 
-  useEffect(() => () => { active.current?.abort(); }, []);
+  useEffect(
+    () => () => {
+      active.current?.abort();
+    },
+    [],
+  );
 
   async function findMatches() {
     if (active.current) return;
@@ -58,13 +68,27 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
       const data = await response.json();
       const ids = new Set(projects.map((project) => project.id));
       const seen = new Set<string>();
-      if (!["ai", "manual"].includes(data?.mode) || !Array.isArray(data.matches) || data.matches.length > 3 ||
-          !data.matches.every((match: { projectId?: unknown; reason?: unknown } | null) => {
-            if (!match || typeof match.projectId !== "string" || !ids.has(match.projectId) ||
-                seen.has(match.projectId) || typeof match.reason !== "string" || !match.reason.trim()) return false;
+      if (
+        !["ai", "manual"].includes(data?.mode) ||
+        !Array.isArray(data.matches) ||
+        data.matches.length > 3 ||
+        !data.matches.every(
+          (match: { projectId?: unknown; reason?: unknown } | null) => {
+            if (
+              !match ||
+              typeof match.projectId !== "string" ||
+              !ids.has(match.projectId) ||
+              seen.has(match.projectId) ||
+              typeof match.reason !== "string" ||
+              !match.reason.trim()
+            )
+              return false;
             seen.add(match.projectId);
             return true;
-          })) throw new Error("Invalid response");
+          },
+        )
+      )
+        throw new Error("Invalid response");
       setResult(data);
     } catch {
       setError("Could not load matches. Check your connection and try again.");
@@ -76,38 +100,110 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
   }
 
   return (
-    <section className="rounded-2xl border border-zinc-300 p-6 dark:border-zinc-700" aria-busy={loading}>
-      <h2 className="text-2xl font-semibold">Projects for you</h2>
-      <p className="mt-2 text-sm">Find projects that fit your skills, interests, and weekly hours. Uses AI when available, otherwise rule-based pairing.</p>
-      <p className="mt-2 text-sm">When AI is enabled, your saved skills, interests, availability, and project descriptions are sent to OpenAI when you find matches.</p>
-      {result && <p className="mt-3 text-sm font-semibold" role="status">
-        {result.mode === "ai" ? "AI pairing · OpenAI" : result.fallbackReason === "ai_unavailable"
-          ? "AI is unavailable. Showing rule-based pairing instead."
-          : "Manual pairing · skill and interest rules (no AI used)."}
-      </p>}
-      {problem && <p className="mt-4" role="status">{problem}</p>}
-      {!projects.length && <p className="mt-4">No projects are available yet. Check back after students post projects.</p>}
-      <button type="button" onClick={findMatches} disabled={loading}
-        className="mt-5 rounded-full bg-foreground px-5 py-3 text-background disabled:opacity-50">
-        {loading ? "Finding matches…" : error ? "Retry matching" : "Find my matches"}
-      </button>
-      {error && <p role="alert" className="mt-4 text-red-700 dark:text-red-400">{error}</p>}
-      <p role="status" className="mt-4">
-        {loading ? "Comparing your profile with available projects…" : result ?
-          result.matches.length ? `${result.matches.length} ${result.mode === "ai" ? "AI" : "rule-based"} recommendation${result.matches.length === 1 ? "" : "s"}.` :
-            "No matches found. Try updating your skills, interests, or available hours." :
-          !problem && projects.length ? "Find matches for your current saved profile. Results clear when your profile or projects change." : ""}
-      </p>
-      {result && <ul className="mt-4 space-y-4">
-        {result.matches.map((match) => (
-          <li key={match.projectId} className="rounded-xl border border-zinc-300 p-4 dark:border-zinc-700">
-            <h3 className="text-lg font-semibold">{projects.find((project) => project.id === match.projectId)!.title}</h3>
-            <p className="mt-2">{match.reason}</p>
-            <button type="button" className="mt-3 rounded-full border border-zinc-400 px-4 py-2"
-              onClick={() => onSelectProject(match.projectId)}>View project</button>
-          </li>
-        ))}
-      </ul>}
+    <section
+      className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+      aria-busy={loading}
+    >
+      <div className="border-b border-slate-100 bg-linear-to-br from-indigo-50 via-white to-white px-6 py-7 sm:px-8">
+        <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
+          Projects for you
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+          Find projects that fit your skills, interests, and weekly hours. Uses
+          AI when available, otherwise rule-based pairing.
+        </p>
+      </div>
+      <div className="px-6 py-6 sm:px-8">
+        <p className="text-sm leading-6 text-slate-500">
+          When AI is enabled, your saved skills, interests, availability, and
+          project descriptions are sent to OpenAI when you find matches.
+        </p>
+        {result && (
+          <p
+            className="mt-4 text-sm font-semibold text-slate-700"
+            role="status"
+          >
+            {result.mode === "ai" ?
+              "AI pairing · OpenAI"
+            : result.fallbackReason === "ai_unavailable" ?
+              "AI is unavailable. Showing rule-based pairing instead."
+            : "Manual pairing · skill and interest rules (no AI used)."}
+          </p>
+        )}
+        {problem && (
+          <p
+            className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900"
+            role="status"
+          >
+            {problem}
+          </p>
+        )}
+        {!projects.length && (
+          <p className="mt-5 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            No projects are available yet. Check back after students post
+            projects.
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={findMatches}
+          disabled={loading}
+          className="mt-5 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loading ?
+            "Finding matches…"
+          : error ?
+            "Retry matching"
+          : "Find my matches"}
+        </button>
+        {error && (
+          <p
+            role="alert"
+            className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            {error}
+          </p>
+        )}
+        <p role="status" className="mt-4 text-sm text-slate-600">
+          {loading ?
+            "Comparing your profile with available projects…"
+          : result ?
+            result.matches.length ?
+              `${result.matches.length} ${result.mode === "ai" ? "AI" : "rule-based"} recommendation${result.matches.length === 1 ? "" : "s"}.`
+            : "No matches found. Try updating your skills, interests, or available hours."
+
+          : !problem && projects.length ?
+            "Find matches for your current saved profile. Results clear when your profile or projects change."
+          : ""}
+        </p>
+        {result && (
+          <ul className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {result.matches.map((match) => (
+              <li
+                key={match.projectId}
+                className="flex flex-col rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              >
+                <h3 className="text-lg font-bold text-slate-900">
+                  {
+                    projects.find((project) => project.id === match.projectId)!
+                      .title
+                  }
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {match.reason}
+                </p>
+                <button
+                  type="button"
+                  className="mt-auto pt-5 text-left text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
+                  onClick={() => onSelectProject(match.projectId)}
+                >
+                  View project
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }
