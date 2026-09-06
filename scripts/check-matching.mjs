@@ -17,7 +17,7 @@ async function post(body, status = 200, raw = false) {
   });
   assert.equal(response.status, status);
   const result = await response.json();
-  if (status === 200) assert.equal(result.mode, "sample");
+  if (status === 200) assert.equal(result.mode, "manual", "Run deterministic API checks with API_AI_KEY unset.");
   else assert.equal(typeof result.error, "string");
   return result;
 }

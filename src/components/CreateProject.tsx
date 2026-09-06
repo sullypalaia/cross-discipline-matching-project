@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
+import { createClient } from "@/utils/supabase/clients";
 
 export type Project = {
   title: string;
@@ -34,11 +36,16 @@ export default function CreateProject({
   onCreate,
   renderTrigger,
 }: CreateProjectProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState("");
+  const [lookingFor, setLookingFor] = useState("");
+  const [hoursPerWeek, setHoursPerWeek] = useState("4");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
@@ -79,19 +86,63 @@ export default function CreateProject({
     setDescription("");
     setSelectedTags([]);
     setCustomTag("");
+    setLookingFor("");
+    setHoursPerWeek("4");
+    setError("");
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError("");
 
-    onCreate?.({
+    const hours = Number(hoursPerWeek);
+    if (!Number.isFinite(hours) || hours < 0 || hours > 80) {
+      setError("Weekly time must be between 0 and 80 hours.");
+      return;
+    }
+
+    setSaving(true);
+    const supabase = createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setSaving(false);
+      setError("Sign in to create a project.");
+      router.push("/login");
+      return;
+    }
+
+    const project = {
       title: title.trim(),
       description: description.trim(),
       tags: selectedTags,
-    });
+      owner: user.id,
+      lookingFor: lookingFor
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      hours_per_week: hours,
+      num_members: 1,
+    };
+
+    const { error: insertError } = await supabase
+      .from("user_projects")
+      .insert(project);
+
+    setSaving(false);
+    if (insertError) {
+      setError(insertError.message);
+      return;
+    }
+
+    onCreate?.({ title: project.title, description: project.description, tags: project.tags });
 
     resetForm();
     setIsOpen(false);
+    router.refresh();
   };
 
   return (
@@ -172,6 +223,17 @@ export default function CreateProject({
                   placeholder="e.g. Campus sustainability dashboard"
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
                 />
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="block text-sm font-semibold text-slate-800" htmlFor="project-looking-for">
+                  Looking for
+                  <input id="project-looking-for" type="text" value={lookingFor} onChange={(event) => setLookingFor(event.target.value)} placeholder="Developer, researcher" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-normal text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
+                </label>
+                <label className="block text-sm font-semibold text-slate-800" htmlFor="project-hours">
+                  Hours per week
+                  <input id="project-hours" type="number" min="0" max="80" step="0.5" required value={hoursPerWeek} onChange={(event) => setHoursPerWeek(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-normal text-slate-950 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
+                </label>
               </div>
 
               <div>
@@ -268,19 +330,23 @@ export default function CreateProject({
                 )}
               </fieldset>
 
+              {error && <p role="alert" className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800">{error}</p>}
+
               <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
+                  disabled={saving}
                   className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
+                  disabled={saving}
                   className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                  Create project
+                  {saving ? "Creating…" : "Create project"}
                 </button>
               </div>
               </form>

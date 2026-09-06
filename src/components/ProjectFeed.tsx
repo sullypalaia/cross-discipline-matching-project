@@ -31,6 +31,7 @@ export default function ProjectFeed({
       const searchable = [
         project.description,
         project.owner,
+        project.owner_name ?? "",
         ...project.tags,
         ...project.lookingFor,
       ]

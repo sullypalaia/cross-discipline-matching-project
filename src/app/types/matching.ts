@@ -20,7 +20,11 @@ export type Project = {
 
 export type Match = { projectId: string; reason: string };
 export type MatchRequest = { profile: Profile; projects: Project[] };
-export type MatchResponse = { matches: Match[]; mode: "sample" };
+export type MatchResponse = {
+  matches: Match[];
+  mode: "ai" | "manual";
+  fallbackReason?: "no_key" | "ai_unavailable" | "no_eligible_projects";
+};
 export type MatchError = { error: string };
 
 // KEEP: These types are imported by the form, matcher, validation, and endpoint.

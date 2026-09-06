@@ -6,7 +6,7 @@ import { requestError } from "@/lib/ai/validation";
 
 type Props = {
   // KEEP: Student 4 owns this component and /api/match. Integration belongs in
-  // Student 1's parent component; keep sample labels until real AI is connected.
+  // Student 1's parent component; result labels reflect the server's actual mode.
   // TODO(team integration): Student 1 passes the saved Profile (or null) and
   // current available Project[] from shared storage; Student 2 supplies the fields.
   profile: Profile | null;
@@ -39,7 +39,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
     if (active.current || problem || projects.length === 0) return;
     const controller = new AbortController();
     active.current = controller;
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => controller.abort(), 20000);
     setLoading(true);
     setError(null);
     setResult(null);
@@ -54,7 +54,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
       const data = await response.json();
       const ids = new Set(projects.map((project) => project.id));
       const seen = new Set<string>();
-      if (data?.mode !== "sample" || !Array.isArray(data.matches) || data.matches.length > 3 ||
+      if (!["ai", "manual"].includes(data?.mode) || !Array.isArray(data.matches) || data.matches.length > 3 ||
           !data.matches.every((match: { projectId?: unknown; reason?: unknown } | null) => {
             if (!match || typeof match.projectId !== "string" || !ids.has(match.projectId) ||
                 seen.has(match.projectId) || typeof match.reason !== "string" || !match.reason.trim()) return false;
@@ -74,7 +74,13 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
   return (
     <section className="rounded-2xl border border-zinc-300 p-6 dark:border-zinc-700" aria-busy={loading}>
       <h2 className="text-2xl font-semibold">Projects for you</h2>
-      <p className="mt-2 text-sm">Sample matching — skill and interest rules, not a live AI model. Projects must fit your weekly hours.</p>
+      <p className="mt-2 text-sm">Find projects that fit your skills, interests, and weekly hours. Uses AI when available, otherwise rule-based pairing.</p>
+      <p className="mt-2 text-sm">When AI is enabled, your saved skills, interests, availability, and project descriptions are sent to OpenAI when you find matches.</p>
+      {result && <p className="mt-3 text-sm font-semibold" role="status">
+        {result.mode === "ai" ? "AI pairing · OpenAI" : result.fallbackReason === "ai_unavailable"
+          ? "AI is unavailable. Showing rule-based pairing instead."
+          : "Manual pairing · skill and interest rules (no AI used)."}
+      </p>}
       {problem && <p className="mt-4" role="status">{problem}</p>}
       {!projects.length && <p className="mt-4">No projects are available yet. Check back after students post projects.</p>}
       <button type="button" onClick={findMatches} disabled={loading || !!problem || !projects.length}
@@ -84,7 +90,7 @@ function MatchingSession({ profile, projects, onSelectProject }: Props) {
       {error && <p role="alert" className="mt-4 text-red-700 dark:text-red-400">{error}</p>}
       <p role="status" className="mt-4">
         {loading ? "Comparing your profile with available projects…" : result ?
-          result.matches.length ? `${result.matches.length} sample recommendation${result.matches.length === 1 ? "" : "s"}.` :
+          result.matches.length ? `${result.matches.length} ${result.mode === "ai" ? "AI" : "rule-based"} recommendation${result.matches.length === 1 ? "" : "s"}.` :
             "No matches found. Try updating your skills, interests, or available hours." :
           !problem && projects.length ? "Find matches for your current saved profile. Results clear when your profile or projects change." : ""}
       </p>

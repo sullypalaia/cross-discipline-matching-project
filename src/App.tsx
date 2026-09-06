@@ -6,6 +6,11 @@ import CreateProject from "./components/CreateProject";
 import ProjectFeed from "./components/ProjectFeed";
 import type { Project } from "./components/ProjectCard";
 import JoinRequestForm from "./components/JoinRequestForm";
+import ProfileForm from "./components/ai/ProfileForm";
+import ProjectMatcher from "./components/ai/ProjectMatcher";
+import type { Profile } from "./app/types/matching";
+import { isMatchingProject } from "./lib/ai/validation";
+import FacultyFinder from "./components/ai/FacultyFinder";
 
 type AppProps = {
   projects: Project[];
@@ -14,6 +19,16 @@ type AppProps = {
 
 export default function App({ projects, accountLabel }: AppProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  // TODO(team integration): Student 1 replaces this session-only state with the
+  // shared saved Profile and save callback. No separate browser storage is used.
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const matchingProjects = projects.map((project) => ({
+    id: project.id == null ? "" : String(project.id),
+    title: project.title?.trim() || `${project.owner_name?.trim() || "Student"}'s project`,
+    description: project.description,
+    skillsNeeded: project.lookingFor,
+    hoursPerWeek: project.hours_per_week,
+  })).filter(isMatchingProject);
   return (
     <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
       <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur">
@@ -40,9 +55,12 @@ export default function App({ projects, accountLabel }: AppProps) {
             <Link href="/our-goal" className="transition hover:text-slate-950">
               Our goal
             </Link>
-            <a href="/account" className="transition hover:text-slate-950">
-              My profile
+            <a href="#profile" className="transition hover:text-slate-950">
+              Find matches
             </a>
+            <Link href="/account" className="transition hover:text-slate-950">
+              My profile
+            </Link>
           </nav>
           <CreateProject
             renderTrigger={(onClick) => (
@@ -90,9 +108,9 @@ export default function App({ projects, accountLabel }: AppProps) {
         {selectedProject && (
           <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
             <p>
-              <span className="font-bold">{selectedProject.owner}</span>
-              &apos;s project is selected. Its full details and join flow can
-              open here when those views are connected.
+              <span className="font-bold">{selectedProject.owner_name ?? "This project"}</span>
+              {" is selected. Its full details and join flow can open here"}
+              when those views are connected.
             </p>
             <button
               type="button"
@@ -109,6 +127,18 @@ export default function App({ projects, accountLabel }: AppProps) {
             selectedProject={selectedProject ?? undefined}
             onSelectProject={setSelectedProject}
           />
+        </div>
+        <div id="profile" className="mt-10 space-y-6 rounded-3xl bg-white p-6">
+          <h2 className="text-2xl font-bold">Your profile and project matches</h2>
+          <p className="text-sm text-slate-600">Your profile is saved for this visit only and resets when you refresh.</p>
+          <ProfileForm initialProfile={profile} onSave={setProfile} />
+          {profile && <p role="status">Profile ready: {profile.skills.join(", ")} · {profile.hoursPerWeek} hours/week.</p>}
+          {matchingProjects.length < projects.length && <p className="text-sm text-amber-800">
+            {projects.length - matchingProjects.length} project(s) cannot be paired yet because their details are incomplete or invalid. Weekly hours must be greater than 0 and no more than 80.
+          </p>}
+          <ProjectMatcher profile={profile} projects={matchingProjects}
+            onSelectProject={(id) => setSelectedProject(projects.find((project) => String(project.id) === id) ?? null)} />
+          <FacultyFinder />
         </div>
       </div>
       {selectedProject && (
