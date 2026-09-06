@@ -33,7 +33,7 @@ export default function OurGoal() {
             <Link href="/our-goal" className="text-indigo-600">
               Our goal
             </Link>
-            <Link href="/#profile" className="transition hover:text-slate-950">
+            <Link href="/account" className="transition hover:text-slate-950">
               My profile
             </Link>
           </nav>
