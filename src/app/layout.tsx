@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Crosspaths",
+  title: "Atlanticus",
   description: "Find meaningful collaborations across Cal Poly.",
 };
 

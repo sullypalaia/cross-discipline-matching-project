@@ -49,7 +49,7 @@ export default async function OurGoal() {
         <div className="max-w-3xl rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-10">
           <p className="text-lg leading-9 text-slate-600 sm:text-xl sm:leading-10">
             Our goal is to help Cal Poly students find meaningful collaborations
-            beyond the boundaries of their major. Crosspaths brings different
+            beyond the boundaries of their major. Atlanticus brings different
             skills, ideas, and perspectives together so students can turn
             curious questions into hands-on projects. By making it easier to
             discover the right people, we hope to build a more connected campus
