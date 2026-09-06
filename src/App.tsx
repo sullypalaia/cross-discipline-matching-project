@@ -37,13 +37,8 @@ export default function App({ projects }: AppProps) {
               Explore
             </Link>
             <Link href="/our-goal" className="transition hover:text-slate-950">
-              Our Goal
+              Our goal
             </Link>
-            <a href="#profile" className="transition hover:text-slate-950">
-            </a>
-            <a href="#how-it-works" className="transition hover:text-slate-950">
-              How it works
-            </a>
             <a href="/account" className="transition hover:text-slate-950">
               My profile
             </a>
@@ -81,9 +76,8 @@ export default function App({ projects }: AppProps) {
           <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
             <p>
               <span className="font-bold">{selectedProject.owner}</span>
-              &apos;s
-              project is selected. Its full details and join flow can open here
-              when those views are connected.
+              &apos;s project is selected. Its full details and join flow can
+              open here when those views are connected.
             </p>
             <button
               type="button"
@@ -102,7 +96,12 @@ export default function App({ projects }: AppProps) {
           />
         </div>
       </div>
-      {selectedProject && <JoinRequestForm project={selectedProject} onClose={() => setSelectedProject(null)} />}
+      {selectedProject && (
+        <JoinRequestForm
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </main>
   );
 }
