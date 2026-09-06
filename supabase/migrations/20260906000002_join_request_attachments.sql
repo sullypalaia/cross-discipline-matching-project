@@ -33,7 +33,7 @@ using (
     where public.join_requests.attachment_path = storage.objects.name
       and (
         public.join_requests.requester_id = (select auth.uid())
-        or public.user_projects.owner = (select auth.uid())
+        or public.user_projects.owner::text = (select auth.uid())::text
       )
   )
 );
