@@ -1,55 +1,30 @@
-"use client";
-
-import Link from "next/link";
-import CreateProject from "@/components/CreateProject";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import OurGoalHeader from "./OurGoalHeader";
 
 const campusImage =
   "https://www.calpoly.edu/sites/default/files/2022-12/20220422-DesignVillage-JoeJ0055.jpg";
 
-export default function OurGoal() {
+export default async function OurGoal() {
+  const supabase = createClient(await cookies());
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let accountLabel: string | null = null;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    accountLabel = profile?.display_name?.trim() || user.email || "Account";
+  }
+
   return (
     <main className="min-h-screen bg-[#f8f8fc] text-slate-900">
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 font-bold tracking-tight text-slate-950"
-          >
-            <span
-              className="grid size-9 place-items-center rounded-xl bg-indigo-600 text-lg text-white"
-              aria-hidden="true"
-            >
-              ✦
-            </span>
-            Crosspaths
-          </Link>
-          <nav
-            className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex"
-            aria-label="Main navigation"
-          >
-            <Link href="/" className="transition hover:text-slate-950">
-              Explore
-            </Link>
-            <Link href="/our-goal" className="text-indigo-600">
-              Our goal
-            </Link>
-            <Link href="/account" className="transition hover:text-slate-950">
-              My profile
-            </Link>
-          </nav>
-          <CreateProject
-            renderTrigger={(onClick) => (
-              <button
-                type="button"
-                onClick={onClick}
-                className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-600"
-              >
-                Post a project
-              </button>
-            )}
-          />
-        </div>
-      </header>
+      <OurGoalHeader accountLabel={accountLabel} />
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-24">
         <div className="mb-12 max-w-2xl">
