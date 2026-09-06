@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import type { Project } from "./ProjectCard";
+import { createClient } from "../utils/supabase/clients";
 
 type JoinRequestFormProps = { project: Project; accountName?: string; onClose: () => void; onSubmitted?: () => void };
 
@@ -22,11 +23,21 @@ export default function JoinRequestForm({ project, accountName = "Alex Morgan", 
     setError("");
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/projects/${project.id}/join-requests`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, why, help, hoursPerWeek: commitment, modality }) });
-      if (!response.ok) {
-        const payload = await response.json().catch(() => null);
-        throw new Error(payload?.error ?? "We could not send your request.");
-      }
+      const supabase = createClient();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) throw new Error("You must be signed in to request to join a project.");
+
+      const { error: insertError } = await supabase.from("join_requests").insert({
+        project_id: project.id,
+        requester_id: user.id,
+        applicant_name: name.trim(),
+        motivation: why.trim(),
+        contribution: help.trim(),
+        hours_per_week: commitment,
+        meeting_modality: modality,
+        status: "pending",
+      });
+      if (insertError) throw new Error(insertError.message);
       setSent(true); onSubmitted?.();
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : "We could not send your request.");
