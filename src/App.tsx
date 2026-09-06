@@ -23,7 +23,7 @@ export default function App({ projects }: AppProps) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const matchingProjects = projects.map((project) => ({
     id: project.id == null ? "" : String(project.id),
-    title: project.title?.trim() || `${project.owner}'s project`,
+    title: project.title?.trim() || `${project.owner_name?.trim() || "Student"}'s project`,
     description: project.description,
     skillsNeeded: project.lookingFor,
     hoursPerWeek: project.hours_per_week,
@@ -52,13 +52,10 @@ export default function App({ projects }: AppProps) {
               Explore
             </Link>
             <Link href="/our-goal" className="transition hover:text-slate-950">
-              Our Goal
+              Our goal
             </Link>
             <a href="#profile" className="transition hover:text-slate-950">
               Find matches
-            </a>
-            <a href="#how-it-works" className="transition hover:text-slate-950">
-              How it works
             </a>
             <Link href="/account" className="transition hover:text-slate-950">
               My profile
@@ -96,9 +93,8 @@ export default function App({ projects }: AppProps) {
         {selectedProject && (
           <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-5 py-4 text-sm text-indigo-950 sm:flex-row sm:items-center sm:justify-between">
             <p>
-              <span className="font-bold">{selectedProject.owner}</span>
-              &apos;s
-              project is selected. Its full details and join flow can open here
+              <span className="font-bold">{selectedProject.owner_name ?? "This project"}</span>
+              {" is selected. Its full details and join flow can open here"}
               when those views are connected.
             </p>
             <button
@@ -130,7 +126,12 @@ export default function App({ projects }: AppProps) {
           <FacultyFinder />
         </div>
       </div>
-      {selectedProject && <JoinRequestForm project={selectedProject} onClose={() => setSelectedProject(null)} />}
+      {selectedProject && (
+        <JoinRequestForm
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </main>
   );
 }

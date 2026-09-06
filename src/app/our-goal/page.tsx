@@ -31,9 +31,9 @@ export default function OurGoal() {
               Explore
             </Link>
             <Link href="/our-goal" className="text-indigo-600">
-              Our Goal
+              Our goal
             </Link>
-            <Link href="/#profile" className="transition hover:text-slate-950">
+            <Link href="/account" className="transition hover:text-slate-950">
               My profile
             </Link>
           </nav>
@@ -67,10 +67,10 @@ export default function OurGoal() {
               Our goal is to help Cal Poly students find meaningful
               collaborations beyond the boundaries of their major. Crosspaths
               brings different skills, ideas, and perspectives together so
-              students can turn curious questions into hands-on projects.
-              By making it easier to discover the right people, we hope to
-              build a more connected campus where everyone has a chance to
-              learn by doing.
+              students can turn curious questions into hands-on projects. By
+              making it easier to discover the right people, we hope to build a
+              more connected campus where everyone has a chance to learn by
+              doing.
             </p>
           </div>
 
