@@ -11,10 +11,15 @@ type Props = { initialProfile: Profile | null; projects: Project[]; userId: stri
 
 export default function MatchesWorkspace({ initialProfile, projects, userId }: Props) {
   const [profile, setProfile] = useState<Profile | null>(initialProfile);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const selectedProject = projects.find((project) => project.id === selectedProjectId);
 
   async function saveProfile(nextProfile: Profile) {
+    // Matching can use a validated profile even if account storage is unavailable.
+    setProfile(nextProfile);
+    setSaveNotice("Profile ready for matching. Saving to your account…");
+    try {
     const { error } = await createClient().from("profiles").upsert({
       id: userId,
       skills: nextProfile.skills,
@@ -23,12 +28,16 @@ export default function MatchesWorkspace({ initialProfile, projects, userId }: P
       updated_at: new Date().toISOString(),
     });
     if (error) throw error;
-    setProfile(nextProfile);
+    setSaveNotice("Profile saved to your account and ready for matching.");
+    } catch {
+      setSaveNotice("Your profile is ready for matching for this visit, but could not be saved to your account. Refreshing will discard these changes.");
+    }
   }
 
   return (
     <div className="mt-8 space-y-6">
       <ProfileForm initialProfile={profile} onSave={saveProfile} />
+      {saveNotice && <p role="status" className="rounded-xl bg-indigo-50 p-4 text-sm text-indigo-950">{saveNotice}</p>}
       {selectedProject && <p role="status" className="rounded-xl bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-900">{selectedProject.title} is selected. Return to Explore to view the project and request to join.</p>}
       <ProjectMatcher profile={profile} projects={projects} onSelectProject={setSelectedProjectId} />
       <FacultyFinder />

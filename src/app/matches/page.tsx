@@ -9,7 +9,7 @@ import { createClient } from "@/utils/supabase/server";
 export default async function MatchesPage() {
   const supabase = createClient(await cookies());
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?next=matches");
 
   const [{ data: profile }, { data: projects, error: projectsError }] = await Promise.all([
     supabase.from("profiles").select("display_name, skills, interests, hours_per_week").eq("id", user.id).maybeSingle(),
@@ -21,7 +21,7 @@ export default async function MatchesPage() {
     ? { skills: profile.skills, interests: profile.interests, hoursPerWeek: Number(profile.hours_per_week) }
     : null;
   const matchingProjects = (projects ?? []).map((project) => ({
-    id: String(project.id),
+    id: project.proj_id == null ? "" : String(project.proj_id),
     title: project.title?.trim() || "Untitled project",
     description: project.description ?? "",
     skillsNeeded: project.lookingFor ?? project.looking_for ?? [],
