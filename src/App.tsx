@@ -145,6 +145,7 @@ export default function App({ projects, accountLabel }: AppProps) {
       {selectedProject && (
         <JoinRequestForm
           project={selectedProject}
+          accountName={accountLabel ?? ""}
           onClose={() => setSelectedProject(null)}
         />
       )}

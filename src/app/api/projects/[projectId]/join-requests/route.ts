@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ pr
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return Response.json({ error: "You must be signed in to request to join a project." }, { status: 401 });
 
-  const { data: project, error: projectError } = await supabase.from("user_projects").select("id").eq("id", projectId).maybeSingle();
+  const { data: project, error: projectError } = await supabase.from("user_projects").select("proj_id").eq("proj_id", projectId).maybeSingle();
   if (projectError) return Response.json({ error: "Unable to verify this project." }, { status: 500 });
   if (!project) return Response.json({ error: "This project no longer exists." }, { status: 404 });
 
