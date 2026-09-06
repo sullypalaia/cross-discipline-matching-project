@@ -18,6 +18,7 @@ type ProjectRecord = {
   owner_name?: string | null;
   created_at?: string | null;
   project_url?: string | null;
+  member_ids?: string[] | null;
 };
 
 type JoinRequestRecord = {
@@ -29,6 +30,11 @@ type JoinRequestRecord = {
   contribution?: string | null;
   hours_per_week?: number | null;
   meeting_modality?: string | null;
+  attachment_path?: string | null;
+  attachment_name?: string | null;
+  attachment_type?: string | null;
+  attachment_size?: number | null;
+  attachment_url?: string | null;
   status: "pending" | "approved" | "rejected";
 };
 
@@ -102,6 +108,16 @@ export default async function DashboardPage() {
       .in("project_id", ownedProjectIds);
     if (error) throw error;
     incomingRequests = (data ?? []) as JoinRequestRecord[];
+    incomingRequests = await Promise.all(
+      incomingRequests.map(async (request) => {
+        if (!request.attachment_path) return request;
+        const { data: signedAttachment, error: signedAttachmentError } = await supabase.storage
+          .from("join-request-attachments")
+          .createSignedUrl(request.attachment_path, 60 * 60);
+        if (signedAttachmentError) throw signedAttachmentError;
+        return { ...request, attachment_url: signedAttachment.signedUrl };
+      }),
+    );
   }
 
   const ownerIds = Array.from(
@@ -265,7 +281,13 @@ export default async function DashboardPage() {
                       {request.hours_per_week ?? "—"} hrs/week ·{" "}
                       {request.meeting_modality ?? "Modality not specified"}
                     </p>
-                    <JoinRequestActions requestId={String(request.id)} />
+                    {request.attachment_url && (
+                      <a href={request.attachment_url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100">
+                        View attachment: {request.attachment_name || "Open file"}
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                    <JoinRequestActions projectId={Number(request.project_id)} requestId={String(request.id)} />
                   </article>
                 );
               })}

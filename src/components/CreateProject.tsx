@@ -138,6 +138,7 @@ export default function CreateProject({
         .filter(Boolean),
       hours_per_week: hours,
       num_members: 1,
+      member_ids: [user.id],
     };
 
     const { error: insertError } = await supabase
