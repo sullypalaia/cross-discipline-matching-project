@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CreateProject from "./CreateProject";
 
 type SiteHeaderProps = { accountLabel: string | null };
@@ -9,14 +9,24 @@ type SiteHeaderProps = { accountLabel: string | null };
 export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
   const initial = accountLabel?.trim().charAt(0).toUpperCase() || "→";
   const [menuOpen, setMenuOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false);
     };
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!accountMenuRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
     document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+    };
   }, [menuOpen]);
 
   return (
@@ -27,9 +37,9 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
           <span className="font-heading">Atlanticus</span>
         </Link>
         <nav className="order-last flex w-full items-center gap-7 text-sm font-medium text-slate-600 md:order-none md:w-auto" aria-label="Main navigation">
-          <Link href="/dashboard" className="transition hover:text-slate-950">Dashboard</Link>
           <Link href="/" className="transition hover:text-slate-950">Explore</Link>
           <Link href="/matches" className="transition hover:text-slate-950">Find matches</Link>
+          <Link href="/dashboard" className="transition hover:text-slate-950">Dashboard</Link>
           <Link href="/our-goal" className="transition hover:text-slate-950">Our goal</Link>
         </nav>
         <div className="flex items-center gap-3">
@@ -42,7 +52,7 @@ export default function SiteHeader({ accountLabel }: SiteHeaderProps) {
               </button>
             )}
           />
-          {accountLabel ? <div className="relative"><button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Open account menu" aria-expanded={menuOpen} aria-controls="account-options" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</button>{menuOpen && <div id="account-options" aria-label="Account options" className="absolute right-0 top-12 z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10"><Link href="/my-projects" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">My projects</Link><Link href="/account" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Account</Link></div>}</div> : <Link href="/login" title="Sign in" aria-label="Sign in" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</Link>}
+          {accountLabel ? <div ref={accountMenuRef} className="relative"><button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Open account menu" aria-expanded={menuOpen} aria-controls="account-options" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</button>{menuOpen && <div id="account-options" aria-label="Account options" className="absolute right-0 top-12 z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10"><Link href="/my-projects" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">My projects</Link><Link href="/account" onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Account</Link></div>}</div> : <Link href="/login" title="Sign in" aria-label="Sign in" className="grid size-10 place-items-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{initial}</Link>}
         </div>
       </div>
     </header>
