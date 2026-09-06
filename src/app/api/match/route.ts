@@ -1,4 +1,4 @@
-import { matchProjects } from "@/lib/ai/matchProjects";
+import { recommendProjects } from "@/lib/ai/recommendProjects";
 import { isMatchRequest, requestError } from "@/lib/ai/validation";
 import type { MatchError, MatchResponse } from "@/app/types/matching";
 
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
   }
   if (!isMatchRequest(body)) return failure(requestError(body) ?? "Invalid matching request.", 400);
   try {
-    const matches = await matchProjects(body.profile, body.projects);
-    return Response.json({ matches, mode: "sample" } satisfies MatchResponse);
+    const result: MatchResponse = await recommendProjects(body.profile, body.projects);
+    return Response.json(result);
   } catch {
     return failure("Matching is temporarily unavailable. Please try again.", 500);
   }

@@ -3,7 +3,7 @@
 // DEMO ONLY — SAFE TO DELETE AFTER INTEGRATION:
 // Student 1 can delete this entire page once the real app saves a profile,
 // matches Student 2's actual projects, and opens Student 3's detail view by ID.
-// First place ProfileForm and ProjectMatcher in the real app with real callbacks.
+// Components are now placed in the real app; shared profile persistence is pending.
 // Deleting this file removes /matching-demo, not the reusable feature components.
 // Keep src/components/ai, src/lib/ai, src/app/api/match, and the matching types.
 // Student 4 owns this testing page until that handoff is complete.
@@ -11,6 +11,7 @@
 import { useState } from "react";
 import ProfileForm from "@/components/ai/ProfileForm";
 import ProjectMatcher from "@/components/ai/ProjectMatcher";
+import FacultyFinder from "@/components/ai/FacultyFinder";
 import type { Profile, Project } from "@/app/types/matching";
 
 // DELETE WITH THIS DEMO: fictional sampleProjects, local profile/selection state,
@@ -68,6 +69,7 @@ export default function MatchingDemo() {
         Test with no available projects
       </label>
       <ProjectMatcher profile={profile} projects={empty ? [] : sampleProjects} onSelectProject={setSelectedId} />
+      <FacultyFinder />
 
       {/* TODO(team integration): Student 1 connects onSelectProject(id) to
           Student 3's actual detail view. This panel only confirms the received ID. */}

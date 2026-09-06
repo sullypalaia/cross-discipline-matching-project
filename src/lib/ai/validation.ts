@@ -1,4 +1,4 @@
-import type { MatchRequest, Profile } from "@/app/types/matching";
+import type { MatchRequest, Profile, Project } from "@/app/types/matching";
 
 export const MAX_HOURS = 80;
 export const MAX_PROJECTS = 200;
@@ -20,6 +20,12 @@ export function profileError(value: unknown): string | null {
   return null;
 }
 
+export function isMatchingProject(project: unknown): project is Project {
+  return record(project) && text(project.id, 120) && project.id === project.id.trim() &&
+    text(project.title, 200) && text(project.description, 5000) &&
+    tags(project.skillsNeeded, false) && hours(project.hoursPerWeek);
+}
+
 export function requestError(value: unknown): string | null {
   if (!record(value)) return "Send an object containing profile and projects.";
   const error = profileError(value.profile);
@@ -28,9 +34,7 @@ export function requestError(value: unknown): string | null {
     return `Send an array of at most ${MAX_PROJECTS} projects.`;
   const ids = new Set<string>();
   for (const project of value.projects) {
-    if (!record(project) || !text(project.id, 120) || project.id !== project.id.trim() ||
-        !text(project.title, 200) || !text(project.description, 5000) ||
-        !tags(project.skillsNeeded, false) || !hours(project.hoursPerWeek))
+    if (!isMatchingProject(project))
       return "Each project needs a stable ID, title, description, skillsNeeded array, and weekly hours greater than 0 and at most 80.";
     if (ids.has(project.id)) return "Project IDs must be unique.";
     ids.add(project.id);

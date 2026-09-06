@@ -1,5 +1,10 @@
 # Student 4: profiles and sample recommendations
 
+> Update: optional OpenAI pairing and the full-homepage connection are implemented.
+> See [current setup instructions](ai-pairing-setup.md). The endpoint now returns
+> `mode: "ai" | "manual"`, not `"sample"`. Shared profile persistence still needs
+> Student 1. Sections below describe the original sample-only handoff.
+
 Feature branch: `tom-ai`. This feature adds no shared storage, dependencies,
 navigation integration, or main-page changes. The matching types use the existing
 type-file location; no competing type file was created.
