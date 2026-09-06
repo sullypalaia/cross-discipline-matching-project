@@ -6,6 +6,7 @@ export type Project = {
   tags: string[];
   description: string;
   owner: string;
+  owner_name?: string | null;
   lookingFor: string[];
   hours_per_week: number;
   num_members: number;
@@ -23,13 +24,6 @@ export default function ProjectCard({
   isSelected = false,
   onSelect,
 }: ProjectCardProps) {
-  const ownerInitials = project.owner
-    .split(/\s+/)
-    .map((name) => name[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
   return (
     <article
       className={`group flex h-full flex-col rounded-3xl border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70 ${isSelected ? "border-indigo-500 ring-2 ring-indigo-100" : "border-slate-200"}`}
@@ -41,11 +35,16 @@ export default function ProjectCard({
             style={{ backgroundColor: "#5b5bd6" }}
             aria-hidden="true"
           >
-            {ownerInitials}
+            {(project.owner_name ?? "Project owner")
+              .split(/\s+/)
+              .map((name) => name[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase()}
           </span>
           <div>
             <p className="text-sm font-semibold text-slate-800">
-              {project.owner}
+              {project.owner_name ?? "Unknown collaborator"}
             </p>
             <p className="mt-0.5 text-xs text-slate-500">
               Posted {new Date(project.created_at).toLocaleDateString()}
