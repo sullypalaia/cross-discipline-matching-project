@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
 import { createClient } from "@/utils/supabase/server";
+import JoinRequestActions from "@/components/JoinRequestActions";
 
 type ProjectRecord = {
   proj_id: number | string;
@@ -13,6 +14,7 @@ type ProjectRecord = {
   hours_per_week?: number | null;
   num_members?: number | null;
   owner?: string | null;
+  member_ids?: string[] | null;
 };
 
 type JoinRequestRecord = {
@@ -129,6 +131,9 @@ export default async function DashboardPage() {
                   <p className="mt-4 text-xs text-slate-500">
                     {request.hours_per_week ?? "—"} hrs/week · {request.meeting_modality ?? "Modality not specified"}
                   </p>
+                  {request.status === "pending" && project && (
+                    <JoinRequestActions projectId={project.proj_id} requestId={request.id} />
+                  )}
                 </article>
               );
             })}
