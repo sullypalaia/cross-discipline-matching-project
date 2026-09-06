@@ -16,6 +16,7 @@ type ProjectRecord = {
   owner?: string | null;
   owner_name?: string | null;
   created_at?: string | null;
+  member_ids?: string[] | null;
 };
 
 type JoinRequestRecord = {
@@ -283,7 +284,7 @@ export default async function DashboardPage() {
                       {request.hours_per_week ?? "—"} hrs/week ·{" "}
                       {request.meeting_modality ?? "Modality not specified"}
                     </p>
-                    <JoinRequestActions requestId={String(request.id)} />
+                    <JoinRequestActions projectId={Number(request.project_id)} requestId={String(request.id)} />
                   </article>
                 );
               })}
