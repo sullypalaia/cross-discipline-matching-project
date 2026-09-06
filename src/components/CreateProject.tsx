@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { createClient } from "@/utils/supabase/clients";
+import SkillSuggestions from "./ai/SkillSuggestions";
 
 export type Project = {
   title: string;
@@ -225,15 +226,24 @@ export default function CreateProject({
                 />
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="space-y-4">
                 <label className="block text-sm font-semibold text-slate-800" htmlFor="project-looking-for">
                   Looking for
                   <input id="project-looking-for" type="text" value={lookingFor} onChange={(event) => setLookingFor(event.target.value)} placeholder="Developer, researcher" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-normal text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
                 </label>
-                <label className="block text-sm font-semibold text-slate-800" htmlFor="project-hours">
+                <div className="flex items-start gap-4">
+                <label className="block w-28 shrink-0 text-sm font-semibold text-slate-800" htmlFor="project-hours">
                   Hours per week
                   <input id="project-hours" type="number" min="0" max="80" step="0.5" required value={hoursPerWeek} onChange={(event) => setHoursPerWeek(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-normal text-slate-950 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
                 </label>
+                <div className="min-w-0 flex-1 pt-7">
+                  <SkillSuggestions key={JSON.stringify([title, description])} title={title} description={description} selected={lookingFor}
+                    onAdd={(skill) => setLookingFor((current) => {
+                      const existing = current.split(",").map((value) => value.trim()).filter(Boolean);
+                      return existing.some((value) => value.toLowerCase() === skill.toLowerCase()) ? current : [...existing, skill].join(", ");
+                    })} />
+                </div>
+                </div>
               </div>
 
               <div>
