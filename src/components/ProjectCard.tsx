@@ -7,11 +7,22 @@ export type Project = {
   description: string;
   owner: string;
   owner_name?: string | null;
+  project_url?: string | null;
   lookingFor: string[];
   hours_per_week: number;
   num_members: number;
   created_at: string;
 };
+
+function safeProjectUrl(value: string | null | undefined) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
 
 type ProjectCardProps = {
   project: Project;
@@ -24,6 +35,7 @@ export default function ProjectCard({
   isSelected = false,
   onSelect,
 }: ProjectCardProps) {
+  const projectUrl = safeProjectUrl(project.project_url);
   return (
     <article
       className={`group flex h-full flex-col rounded-3xl border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70 ${isSelected ? "border-indigo-500 ring-2 ring-indigo-100" : "border-slate-200"}`}
@@ -66,6 +78,17 @@ export default function ProjectCard({
         <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
           {project.description}
         </p>
+        {projectUrl && (
+          <a
+            href={projectUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 transition hover:text-indigo-800 focus:outline-none focus:underline"
+          >
+            View project <span aria-hidden="true">↗</span>
+            <span className="sr-only">(opens in a new tab)</span>
+          </a>
+        )}
       </div>
       <div className="mt-6 border-t border-slate-100 pt-5">
         <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">

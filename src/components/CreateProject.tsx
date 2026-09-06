@@ -10,6 +10,7 @@ export type Project = {
   title: string;
   description: string;
   tags: string[];
+  projectUrl?: string;
 };
 
 type CreateProjectProps = {
@@ -41,6 +42,7 @@ export default function CreateProject({
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [projectUrl, setProjectUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState("");
   const [lookingFor, setLookingFor] = useState("");
@@ -85,6 +87,7 @@ export default function CreateProject({
   const resetForm = () => {
     setTitle("");
     setDescription("");
+    setProjectUrl("");
     setSelectedTags([]);
     setCustomTag("");
     setLookingFor("");
@@ -100,6 +103,18 @@ export default function CreateProject({
     if (!Number.isFinite(hours) || hours < 0 || hours > 80) {
       setError("Weekly time must be between 0 and 80 hours.");
       return;
+    }
+
+    let normalizedProjectUrl: string | null = null;
+    if (projectUrl.trim()) {
+      try {
+        const url = new URL(projectUrl.trim());
+        if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error();
+        normalizedProjectUrl = url.toString();
+      } catch {
+        setError("Project link must be a valid http or https URL.");
+        return;
+      }
     }
 
     setSaving(true);
@@ -119,6 +134,7 @@ export default function CreateProject({
     const project = {
       title: title.trim(),
       description: description.trim(),
+      project_url: normalizedProjectUrl,
       tags: selectedTags,
       owner: user.id,
       lookingFor: lookingFor
@@ -139,7 +155,7 @@ export default function CreateProject({
       return;
     }
 
-    onCreate?.({ title: project.title, description: project.description, tags: project.tags });
+    onCreate?.({ title: project.title, description: project.description, tags: project.tags, projectUrl: normalizedProjectUrl ?? undefined });
 
     resetForm();
     setIsOpen(false);
@@ -264,6 +280,25 @@ export default function CreateProject({
                   placeholder="What are you building, and what would you like others to know?"
                   className="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
                 />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="project-url"
+                  className="mb-2 block text-sm font-semibold text-slate-800"
+                >
+                  Project link <span className="font-normal text-slate-500">(optional)</span>
+                </label>
+                <input
+                  id="project-url"
+                  name="projectUrl"
+                  type="url"
+                  value={projectUrl}
+                  onChange={(event) => setProjectUrl(event.target.value)}
+                  placeholder="https://example.com/project"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                />
+                <p className="mt-2 text-xs leading-5 text-slate-500">Share a website, repository, prototype, or other public project page.</p>
               </div>
 
               <fieldset>
