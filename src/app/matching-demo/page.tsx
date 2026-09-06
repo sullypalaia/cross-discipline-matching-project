@@ -51,7 +51,7 @@ export default function MatchingDemo() {
   const selected = sampleProjects.find((project) => project.id === selectedId);
 
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-6 p-6 sm:p-10">
+    <main id="main-content" className="mx-auto w-full max-w-3xl space-y-6 p-6 sm:p-10">
       <header className="space-y-3">
         <p className="text-sm font-semibold uppercase tracking-wide">Student 4 · Sample demo</p>
         <h1 className="text-3xl font-semibold">Try profiles and matching</h1>
